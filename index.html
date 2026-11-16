@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Form 9 by NMC</title>
+    <title>PRACTICE ENGLISH BY TTP</title>
     <style>
         /* ==========================================================================
            100% OFFLINE CSS SYSTEM - DÀNH RIÊNG CHO WORD FORM 9 BY NMC
@@ -763,6 +763,17 @@
         }
 
         /* ===== BỔ SUNG: đăng nhập + chip học sinh (phần còn lại của giao diện giữ nguyên file gốc) ===== */
+
+        /* ===== Giao diện vui: hoạ tiết nền (1 ảnh tĩnh nhỏ, không hoạt hình) ===== */
+        body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' fill='none' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M34 22l5.5 11.5 12.5 1.7-9.2 8.8 2.3 12.4L34 50.3 22.9 56.4l2.3-12.4-9.2-8.8 12.5-1.7z' stroke='rgba(251,191,36,.30)'/%3E%3Ctext x='150' y='44' font-family='Arial,sans-serif' font-weight='800' font-size='22' fill='rgba(56,189,248,.26)' stroke='none' transform='rotate(-8 150 44)'%3EABC%3C/text%3E%3Cpath d='M205 110l30-30 10 10-30 30-14 4z M235 80l10 10' stroke='rgba(244,114,182,.30)'/%3E%3Cpath d='M40 118h46a10 10 0 0 1 10 10v22a10 10 0 0 1-10 10H62l-14 12v-12H40a10 10 0 0 1-10-10v-22a10 10 0 0 1 10-10z' stroke='rgba(255,255,255,.20)'/%3E%3Ctext x='44' y='146' font-family='Arial,sans-serif' font-weight='800' font-size='17' fill='rgba(255,255,255,.22)' stroke='none'%3EHi%21%3C/text%3E%3Ccircle cx='150' cy='180' r='13' stroke='rgba(253,230,138,.34)'/%3E%3Cpath d='M144 195h12M146 201h8M150 167v-4M138 171l-3-3M162 171l3-3' stroke='rgba(253,230,138,.34)'/%3E%3Cpath d='M30 220q8-12 16 0t16 0t16 0' stroke='rgba(56,189,248,.28)'/%3E%3Cpath d='M120 232c10-5 24-5 34 0v-20c-10-5-24-5-34 0zM137 212v20' stroke='rgba(134,239,172,.30)'/%3E%3Ctext x='196' y='230' font-family='Arial,sans-serif' font-weight='800' font-size='20' fill='rgba(251,191,36,.28)' stroke='none' transform='rotate(7 196 230)'%3EA%2B%3C/text%3E%3Ccircle cx='100' cy='70' r='3' fill='rgba(255,255,255,.22)' stroke='none'/%3E%3Ccircle cx='235' cy='160' r='3' fill='rgba(244,114,182,.30)' stroke='none'/%3E%3Ccircle cx='20' cy='175' r='3' fill='rgba(56,189,248,.30)' stroke='none'/%3E%3C/svg%3E"); background-size: 260px 260px; }
+        @media (max-width: 600px) { body::before { background-size: 200px 200px; } }
+        .brand-title { background: linear-gradient(90deg, #fde68a, #fbbf24 45%, #7dd3fc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: #fde68a; font-size: clamp(1.05rem, 4.8vw, 1.45rem); letter-spacing: 0.01em; }
+        .brand-logo svg { display: block; }
+        .mascot { display: block; margin: 0 auto; cursor: pointer; transform-origin: 50% 100%; animation: owl-bob 3.4s ease-in-out infinite; -webkit-tap-highlight-color: transparent; }
+        @keyframes owl-bob { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+        .owl-bubble { position: relative; margin: 12px auto 14px; max-width: 330px; background: #fff; color: #0f172a; font-weight: 700; font-size: 0.86rem; line-height: 1.35; border-radius: 14px; padding: 9px 12px; min-height: 3.2em; display: flex; align-items: center; justify-content: center; text-align: center; transition: opacity 0.25s; }
+        .owl-bubble::before { content: ""; position: absolute; top: -8px; left: 50%; margin-left: -8px; border: 8px solid transparent; border-top: 0; border-bottom-color: #fff; }
+        @media (prefers-reduced-motion: reduce) { .mascot { animation: none; } .owl-bubble { transition: none; } }
         .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
         .login-card { width: 100%; max-width: 440px; background: rgba(30, 41, 59, 0.92); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px 24px; box-shadow: var(--shadow); }
         .login-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
@@ -854,13 +865,15 @@
     </style>
 </head>
 <body>
+<svg width='0' height='0' style='position:absolute' aria-hidden='true'><symbol id='owl' viewBox='0 0 120 120'><ellipse cx='60' cy='112' rx='26' ry='5' fill='rgba(0,0,0,.25)'/><ellipse cx='60' cy='72' rx='38' ry='38' fill='#fbbf24'/><ellipse cx='60' cy='82' rx='23' ry='24' fill='#fde68a'/><ellipse cx='24' cy='78' rx='9' ry='20' fill='#f59e0b' transform='rotate(14 24 78)'/><ellipse cx='96' cy='78' rx='9' ry='20' fill='#f59e0b' transform='rotate(-14 96 78)'/><circle cx='44' cy='60' r='14' fill='#fff' stroke='#0f172a' stroke-width='3'/><circle cx='76' cy='60' r='14' fill='#fff' stroke='#0f172a' stroke-width='3'/><circle cx='46' cy='62' r='6.5' fill='#0f172a'/><circle cx='74' cy='62' r='6.5' fill='#0f172a'/><circle cx='48' cy='59.5' r='2.2' fill='#fff'/><circle cx='76' cy='59.5' r='2.2' fill='#fff'/><path d='M54 72h12l-6 9z' fill='#f97316'/><path d='M44 96l-3 9m5-9l-1 10m20-10l1 10m3-10l3 9' stroke='#f97316' stroke-width='3' stroke-linecap='round' fill='none'/><path d='M20 38l40-17 40 17-40 17z' fill='#0f172a'/><path d='M38 47v11c0 4 10 8 22 8s22-4 22-8V47l-22 9z' fill='#1e293b'/><path d='M100 38v16' stroke='#fbbf24' stroke-width='3' stroke-linecap='round'/><circle cx='100' cy='57' r='4' fill='#fbbf24'/></symbol></svg>
 
     <!-- ===== MÀN HÌNH ĐĂNG NHẬP: chỉ học sinh có trong danh sách lớp mới vào được ===== -->
     <div id="login-screen" class="login-screen">
         <form class="login-card" onsubmit="return submitLogin(event)" autocomplete="off">
             <div style="text-align:center; margin-bottom:20px;">
-                <div class="brand-logo" style="margin:0 auto 10px; width:56px; height:56px; font-size:28px;">🎓</div>
-                <h1 class="brand-title">Word Form 9 by NMC</h1>
+                <svg class='mascot' id='owl-login' width='96' height='96' viewBox='0 0 120 120' role='img' aria-label='Cú mèo học giỏi'><use href='#owl'/></svg>
+                <div id="owl-say" class="owl-bubble" role="status" aria-live="polite"></div>
+                <h1 class="brand-title">PRACTICE ENGLISH BY TTP</h1>
                 <p style="color:var(--text-muted); font-size:0.92rem; margin-top:4px;">Đăng nhập để làm bài. Kết quả tự động gửi cho giáo viên.</p>
             </div>
             <div id="login-error" class="login-error hidden"></div>
@@ -912,8 +925,8 @@
         <!-- HEADER (KHÔNG CÓ SUBTITLE VÀ KHÔNG CÓ NÚT TẢI OFFLINE) -->
         <header class="app-header">
             <div class="brand-box">
-                <div class="brand-logo">🎓</div>
-                <h1 class="brand-title">Word Form 9 by NMC</h1>
+                <div class="brand-logo"><svg class='' width='34' height='34' viewBox='0 0 120 120' role='img' aria-label='Cú mèo học giỏi'><use href='#owl'/></svg></div>
+                <h1 class="brand-title">PRACTICE ENGLISH BY TTP</h1>
             </div>
             <div class="header-right">
                 <button type="button" class="student-chip" onclick="logoutStudent()" title="Bấm để đăng xuất / đổi tài khoản">👤 <span id="student-chip-text"></span> <span id="sync-state" class="sync">✔</span></button>
@@ -2892,6 +2905,17 @@
         });
 
         window.onload = bootstrapAuth;
+    </script>
+
+    <script>
+    (function () {
+        var T = ["Hello! Hôm nay mình học từ mới nhé! 📚", "Sai cũng không sao, não đang tập thể dục mà! 💪", "Mỗi ngày 10 từ, một năm thành thám tử từ vựng! 🕵️", "Nghĩ kỹ rồi hãy bấm, cú mèo đang nhìn đó nha 🦉", "Noun, verb, adjective... cả nhà thân yêu của chúng ta! 😄", "Học xong nhớ uống nước nha 💧", "Bí quá thì bấm gợi ý, không ai cười đâu! 😉", "Hôm nay bạn đã nói tiếng Anh với ai chưa? 🗣️"], i = 0, b = document.getElementById("owl-say"), m = document.getElementById("owl-login"), t = null;
+        if (!b) return;
+        function next() { i = (i + 1) % T.length; b.style.opacity = "0"; setTimeout(function () { b.textContent = T[i]; b.style.opacity = "1"; }, 250); }
+        b.textContent = T[0];
+        t = setInterval(function () { var s = document.getElementById("login-screen"); if (!s || s.classList.contains("hidden")) { clearInterval(t); return; } next(); }, 7000);
+        if (m) m.addEventListener("click", next);
+    })();
     </script>
 </body>
 </html>
