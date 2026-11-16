@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng điều khiển giáo viên - Word Form 9 by NMC</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --accent: #fbbf24;
+            --success: #22c55e;
+            --danger: #f43f5e;
+            --border: rgba(255, 255, 255, 0.12);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45);
+            --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-sans);
+            background: radial-gradient(circle at top, #172554 0%, #0f172a 55%, #090d16 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.55;
+            padding-bottom: 60px;
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 16px; }
+        .hidden { display: none !important; }
+
+        .panel {
+            background: rgba(30, 41, 59, 0.88);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+
+        .panel h2 { font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; }
+
+        .app-header {
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+            background: rgba(30, 41, 59, 0.88);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 14px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .logo {
+            width: 44px; height: 44px; border-radius: 13px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+        }
+        .brand h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .brand small { color: var(--text-muted); font-size: 0.8rem; }
+
+        .btn {
+            border: none; border-radius: var(--radius-sm); padding: 9px 14px; font-size: 0.88rem; font-weight: 700;
+            cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px;
+            transition: background 0.15s;
+        }
+        .btn:disabled { opacity: 0.6; cursor: default; }
+        .btn-accent { background: var(--accent); color: #0f172a; }
+        .btn-accent:hover:not(:disabled) { background: #fcd34d; }
+        .btn-ghost { background: rgba(255, 255, 255, 0.09); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-ghost:hover { background: rgba(255, 255, 255, 0.16); }
+
+        .field, select, input[type=text], input[type=password] {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            padding: 9px 12px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            outline: none;
+        }
+        select:focus, input:focus { border-color: var(--primary); }
+
+        /* Cổng mật khẩu */
+        .gate { min-height: 80vh; display: flex; align-items: center; justify-content: center; }
+        .gate-card { width: 100%; max-width: 400px; }
+        .gate-card input { width: 100%; margin-bottom: 12px; padding: 12px 14px; font-size: 1rem; }
+        .error-box {
+            background: rgba(244, 63, 94, 0.14); border: 1px solid rgba(244, 63, 94, 0.5);
+            color: #fecdd3; border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; margin-bottom: 12px;
+        }
+
+        /* Thanh lọc */
+        .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .toolbar .grow { flex: 1; min-width: 200px; }
+        .muted { color: var(--text-muted); font-size: 0.84rem; }
+
+        /* KPI */
+        .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+        .kpi {
+            background: rgba(30, 41, 59, 0.88); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 14px 12px; text-align: center;
+        }
+        .kpi .label { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+        .kpi .val { font-size: 1.7rem; font-weight: 800; margin-top: 2px; }
+        .kpi .sub { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Bảng */
+        .table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        th, td { padding: 9px 12px; text-align: left; white-space: nowrap; border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+        th {
+            background: rgba(15, 23, 42, 0.95); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.04em;
+            color: var(--text-muted); cursor: pointer; user-select: none; position: sticky; top: 0;
+        }
+        th:hover { color: #fff; }
+        th.sorted { color: var(--accent); }
+        tbody tr:hover { background: rgba(255, 255, 255, 0.04); }
+        tr.clickable { cursor: pointer; }
+        td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+        .bar { width: 110px; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 99px; overflow: hidden; display: inline-block; vertical-align: middle; }
+        .bar > i { display: block; height: 100%; background: linear-gradient(90deg, #38bdf8, #22c55e); }
+        .bar.bad > i { background: linear-gradient(90deg, #fbbf24, #f43f5e); }
+
+        .strip { display: inline-flex; gap: 1px; vertical-align: middle; }
+        .strip i { width: 6px; height: 14px; border-radius: 1px; background: rgba(255, 255, 255, 0.1); }
+        .strip i.c { background: #22c55e; }
+        .strip i.w { background: #f43f5e; }
+        .strip i.r { background: #fbbf24; }
+        .strip i.p { background: #cbd5e1; }
+        .scope-chip { display: inline-block; font-size: 0.72rem; padding: 1px 8px; border-radius: 999px; background: rgba(56,189,248,0.16); color: #7dd3fc; margin: 1px 3px 1px 0; white-space: nowrap; }
+        .chk-grid { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 6px 0 10px; }
+        .chk-grid label { display: flex; gap: 6px; align-items: center; cursor: pointer; font-size: 0.9rem; }
+        .link-url { font-family: monospace; font-size: 0.78rem; word-break: break-all; color: var(--text-muted, #94a3b8); }
+        .strip i.sg { background: #22c55e; opacity: .55; border-bottom: 2px solid #fff; }
+        .strip i.sb { background: #f43f5e; opacity: .55; border-bottom: 2px solid #fff; }
+        .tag { white-space: nowrap; display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 0.74rem; font-weight: 700; }
+        .tag.none { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+        .tag.idle { background: rgba(251, 191, 36, 0.18); color: #fcd34d; }
+        .tag.doing { background: rgba(56, 189, 248, 0.18); color: #7dd3fc; }
+        .tag.done { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .q-row { display: grid; grid-template-columns: 70px 1fr 120px 70px; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); font-size: 0.88rem; }
+        .q-row:last-child { border-bottom: none; }
+        .q-row b { color: var(--accent); }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); border-radius: 99px; padding: 3px 11px; font-size: 0.82rem; }
+        .chip small { color: var(--text-muted); margin-left: 4px; }
+
+        /* Thẻ (tab) */
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .tab { background: rgba(30, 41, 59, 0.88); border: 1px solid var(--border); color: var(--text-muted); border-radius: 12px; padding: 11px 20px; font-weight: 800; font-size: 0.95rem; cursor: pointer; font-family: inherit; }
+        .tab.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+        .tab .badge { background: #f43f5e; color: #fff; border-radius: 99px; padding: 0 7px; font-size: 0.72rem; margin-left: 6px; }
+
+        /* Biểu mẫu & hộp thoại */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-grid .full { grid-column: 1 / -1; }
+        .lbl { display: block; font-size: 0.74rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+        textarea, .form-grid input[type=text], .form-grid select { width: 100%; }
+        textarea { background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); color: #fff; border-radius: var(--radius-sm); padding: 9px 12px; font-size: 0.92rem; font-family: inherit; outline: none; resize: vertical; }
+        textarea:focus { border-color: var(--primary); }
+        .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        .backdrop { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.78); display: flex; align-items: flex-start; justify-content: center; padding: 24px 12px; overflow-y: auto; z-index: 50; }
+        .modal { width: 100%; max-width: 720px; background: #1e293b; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow); }
+        .modal h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 14px; }
+        .modal .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+        .btn-danger { background: rgba(244, 63, 94, 0.18); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.5); }
+        .btn-danger:hover { background: rgba(244, 63, 94, 0.3); }
+        .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+        .ok-box { background: rgba(34, 197, 94, 0.14); border: 1px solid rgba(34, 197, 94, 0.5); color: #bbf7d0; border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; margin-bottom: 12px; white-space: pre-wrap; }
+        .warn-box { background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.5); color: #fde68a; border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; margin-bottom: 12px; white-space: pre-wrap; }
+        td.wrap { white-space: normal; min-width: 220px; max-width: 420px; }
+        #tq-table td, #tq-table th, #tf-table td, #tf-table th { padding: 8px 8px; }
+        #tq-table td, #tf-table td { white-space: normal; }
+        .row-actions { display: flex; gap: 4px; flex-wrap: nowrap; }
+        .blank { color: var(--accent); font-weight: 800; }
+        tr.hid td { opacity: 0.5; }
+        .tag.bad { background: rgba(244, 63, 94, 0.2); color: #fda4af; }
+        .tag.ok { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+        .tag.t-dien_tu { background: rgba(56,189,248,0.16); color: #7dd3fc; }
+        .tag.t-trac_nghiem { background: rgba(167,139,250,0.16); color: #c4b5fd; }
+        .tag.t-viet_lai { background: rgba(244,114,182,0.16); color: #f9a8d4; }
+        .tag.t-word_entry { background: rgba(52,211,153,0.16); color: #6ee7b7; }
+        .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .opt-grid .optrow { display: flex; align-items: center; gap: 8px; }
+        .opt-grid .optrow b { width: 20px; color: var(--accent); }
+        .tq-filter { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+        .tq-filter select, .tq-filter input { background: rgba(15,23,42,0.9); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; font-size: 0.85rem; }
+        .tq-filter input { flex: 1; min-width: 180px; }
+        .g-row { display: grid; grid-template-columns: minmax(140px, 250px) 1fr 140px 80px; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.88rem; }
+        .g-row:last-child { border-bottom: none; }
+        .seg { display: inline-flex; gap: 6px; margin-bottom: 8px; }
+        .seg button.on { border-color: var(--accent); color: var(--accent); }
+        .tq-unit { font-size: 0.78rem; line-height: 1.35; }
+        .tq-unit .u { color: var(--primary); font-weight: 700; }
+        #tq-sel-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; padding: 8px 12px; border: 1px dashed var(--accent); border-radius: 10px; background: rgba(251,191,36,0.07); font-size: 0.88rem; }
+        #tq-table input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
+        @media (max-width: 700px) { .g-row { grid-template-columns: 1fr 70px; } .g-row .bar, .g-row .muted { display: none; } }
+        .t-row { display: grid; grid-template-columns: 120px 1fr 130px 90px; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.88rem; }
+        .t-row:last-child { border-bottom: none; }
+        @media (max-width: 700px) { .opt-grid { grid-template-columns: 1fr; } .t-row { grid-template-columns: 100px 1fr 80px; } .t-row .bar { display:none; } }
+        .tag.off { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+        .cls-block { margin-bottom: 14px; }
+        .cls-block summary { cursor: pointer; font-weight: 800; padding: 8px 0; }
+        .stu-row { display: grid; grid-template-columns: 34px 1fr 140px 150px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 0.9rem; }
+        .rv-ok { color: #86efac; font-weight: 800; }
+        .rv-bad { color: #fda4af; font-weight: 800; }
+        /* mượt trên điện thoại: nền cố định ở lớp riêng; ô nhập 16px để iPhone không tự phóng to */
+        html { background: #0f172a; }
+        body { background: transparent; background-attachment: scroll; }
+        body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at top, #172554 0%, #0f172a 55%, #090d16 100%); }
+        button, .tab { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        @media (max-width: 900px) {
+            input, select, textarea, .field { font-size: 16px !important; }
+        }
+        @media (max-width: 900px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .stu-row { grid-template-columns: 28px 1fr 110px; }
+            .stu-row .del { grid-column: 1 / -1; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===================== CỔNG MẬT KHẨU GIÁO VIÊN ===================== -->
+    <div id="gate" class="gate">
+        <form class="panel gate-card" onsubmit="return submitKey(event)">
+            <div style="text-align:center; margin-bottom: 16px;">
+                <div class="logo" style="margin: 0 auto 10px;">📊</div>
+                <h1 style="font-size: 1.3rem; font-weight: 800;">Bảng điều khiển giáo viên</h1>
+                <p class="muted">Word Form 9 by NMC</p>
+            </div>
+            <div id="gate-error" class="error-box hidden"></div>
+            <input type="password" id="gate-key" placeholder="Mật khẩu giáo viên" autocomplete="off">
+            <button id="gate-btn" type="submit" class="btn btn-accent" style="width: 100%; justify-content: center; padding: 12px;">Mở bảng điều khiển</button>
+        </form>
+    </div>
+
+    <!-- ===================== BẢNG ĐIỀU KHIỂN ===================== -->
+    <div id="app" class="container hidden">
+        <header class="app-header">
+            <div class="brand">
+                <div class="logo">📊</div>
+                <div>
+                    <h1>Trang giáo viên</h1>
+                    <small id="updated-at">Word Form 9 by NMC</small>
+                </div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <a id="student-link" class="btn btn-ghost" href="#" target="_blank" rel="noopener" title="Link để gửi cho học sinh">🔗 Link học sinh</a>
+                <button class="btn btn-ghost" onclick="logoutTeacher()">🚪 Thoát</button>
+            </div>
+        </header>
+
+        <div id="load-error" class="error-box hidden"></div>
+
+        <nav class="tabs">
+            <button class="tab active" id="tab-results" onclick="showTab('results')">📊 Kết quả</button>
+            <button class="tab" id="tab-questions" onclick="showTab('questions')">📝 Câu hỏi <span id="q-badge" class="badge hidden"></span></button>
+            <button class="tab" id="tab-roster" onclick="showTab('roster')">👥 Lớp học</button>
+            <button class="tab" id="tab-links" onclick="showTab('links')">🔗 Link lớp</button>
+            <button class="tab" id="tab-ac" onclick="showTab('ac')">🛡 Chống gian lận</button>
+        </nav>
+
+        <!-- ============ THẺ 1: KẾT QUẢ ============ -->
+        <div id="pane-results">
+            <div class="panel toolbar">
+                <select id="f-khoi" onchange="setKhoi(this.value)" aria-label="Lọc theo khối"></select>
+                <select id="f-class" onchange="setClass(this.value)"></select>
+                <select id="f-status" onchange="view.status = this.value; render();">
+                    <option value="">Mọi trạng thái</option>
+                    <option value="none">Chưa đăng nhập</option>
+                    <option value="idle">Đã đăng nhập, chưa làm câu nào</option>
+                    <option value="doing">Đang làm</option>
+                    <option value="done">Đã làm hết các câu</option>
+                </select>
+                <input type="text" id="f-search" class="grow" placeholder="🔍 Tìm theo họ tên..." oninput="view.q = this.value; render();">
+                <span class="muted" id="count-label"></span>
+                <label class="muted" style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                    <input type="checkbox" id="auto-refresh" checked> Tự làm mới 60 giây
+                </label>
+                <button class="btn btn-accent" id="refresh-btn" onclick="loadData()">🔄 Làm mới</button>
+                <button class="btn btn-ghost" onclick="exportCsv()">⬇️ Xuất CSV tổng hợp</button>
+                <button class="btn btn-ghost" id="export-detail-btn" onclick="exportDetailCsv()">⬇️ Xuất CSV từng câu</button>
+                <button class="btn btn-ghost" onclick="exportEachClass()" title="Tải riêng một file cho mỗi lớp đang hiển thị">⬇️ Xuất mỗi lớp một file</button>
+            </div>
+
+            <div class="kpi-grid" id="kpis"></div>
+
+            <div class="panel" id="class-panel">
+                <h2>Tổng hợp theo lớp</h2>
+                <div class="table-wrap"><table id="class-table"></table></div>
+                <p class="muted" style="margin-top:8px;">Bấm vào một lớp để xem chi tiết từng học sinh.</p>
+            </div>
+
+            <div class="panel">
+                <h2>Chi tiết từng học sinh</h2>
+                <div class="table-wrap"><table id="student-table"></table></div>
+                <p class="muted" style="margin-top:8px;">
+                    Mỗi ô nhỏ là kết quả mới nhất của một câu:
+                    <span class="strip"><i class="c"></i></span> đúng
+                    <span class="strip"><i class="w"></i></span> sai
+                    <span class="strip"><i class="r"></i></span> xem đáp án
+                    <span class="strip"><i></i></span> chưa làm. Rê chuột lên ô để xem từ gốc / dạng bài.
+                    Bấm <b>tên học sinh</b> để xem bài làm từng câu.
+                    <br>Điểm /10 = số câu đúng ÷ số câu được giao cho lớp đó × 10 (xem đáp án tính là sai).
+                </p>
+            </div>
+
+            <div class="panel hidden" id="type-panel">
+                <h2>Tỉ lệ đúng theo dạng bài</h2>
+                <div id="type-list"></div>
+                <p class="muted" style="margin-top:8px;">Tính trên các câu học sinh đã làm (xem đáp án tính là sai), theo lớp đang chọn.</p>
+            </div>
+
+            <div class="panel hidden" id="group-panel">
+                <h2>Tỉ lệ đúng theo Unit / chủ đề</h2>
+                <div class="seg">
+                    <button class="btn btn-ghost btn-sm on" id="grp-unit" onclick="setGroupBy('unit')">Theo Unit</button>
+                    <button class="btn btn-ghost btn-sm" id="grp-topic" onclick="setGroupBy('topic')">Theo chủ đề</button>
+                </div>
+                <div id="group-list"></div>
+                <p class="muted" style="margin-top:8px;">⚠ = tỉ lệ đúng dưới 50% (phần cần ôn thêm). Tính theo lớp đang chọn; Unit/chủ đề gán ở thẻ Câu hỏi.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="panel">
+                    <h2>Câu cả lớp sai nhiều nhất</h2>
+                    <div id="q-list"></div>
+                    <button class="btn btn-ghost" id="q-toggle" style="margin-top:10px;" onclick="view.allQ = !view.allQ; renderQuestions();"></button>
+                </div>
+                <div class="panel">
+                    <h2>Cần nhắc nhở</h2>
+                    <div style="margin-bottom:14px;">
+                        <div class="muted" style="margin-bottom:6px;">Chưa đăng nhập (<span id="n-none">0</span>)</div>
+                        <div class="chips" id="list-none"></div>
+                    </div>
+                    <div>
+                        <div class="muted" style="margin-bottom:6px;">Đã đăng nhập nhưng chưa làm câu nào (<span id="n-idle">0</span>)</div>
+                        <div class="chips" id="list-idle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ THẺ: LINK TỪNG LỚP / KHỐI ============ -->
+        <div id="pane-links" class="hidden">
+            <div class="panel">
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                    <h2 style="margin:0;">Link gửi học sinh theo lớp / khối</h2>
+                    <button class="btn btn-accent" onclick="copyAllLinks()">📋 Sao chép tất cả (tên lớp + link)</button>
+                </div>
+                <div id="links-msg"></div>
+                <p class="muted" style="margin-bottom:10px;">Gửi link đúng lớp cho học sinh: em mở link là chỉ thấy lớp của mình (ô chọn lớp được chọn sẵn) và chỉ làm các câu được giao cho lớp / khối đó.
+                    Link khối cho phép chọn trong các lớp của khối. Link "cả trường" cho chọn mọi lớp.</p>
+                <div class="table-wrap"><table id="links-table"></table></div>
+            </div>
+        </div>
+
+        <!-- ============ THẺ: CHỐNG GIAN LẬN (RỜI TRANG) ============ -->
+        <div id="pane-ac" class="hidden">
+            <div class="panel">
+                <h2>Chống gian lận: theo dõi học sinh rời trang</h2>
+                <p class="muted" style="margin-bottom:10px;">Chọn cách học sinh làm bài: <b>tự do</b> hoặc <b>bị nhắc nhở</b> khi rời trang (đổi tab, thu nhỏ trình duyệt, chuyển sang ứng dụng khác, tắt màn hình điện thoại).
+                    Có thể đặt khác nhau cho từng lớp. Học sinh đang làm đề sẽ thấy thông báo và số lần đã rời trang. Rời trang quá số lần cho phép thì bài <b>tự nộp</b>.
+                    Hệ thống chỉ phát hiện và ghi lại; không chặn được chụp màn hình hay dùng thiết bị khác, nên hãy xem số lần rời trang như tham khảo.</p>
+                <div id="ac-msg"></div>
+                <div class="form-grid" style="max-width:760px; margin-bottom:12px;">
+                    <div class="full"><label class="lbl" for="ac-mode">Cách làm bài mặc định</label><select id="ac-mode"></select>
+                        <div class="hint"><b>Tự do</b>: không theo dõi (như trước). <b>Nhắc nhở khi Làm đề tổng hợp</b>: đề có giám sát; rời trang thì nhắc và ghi lại, quá giới hạn thì tự nộp, đồng thời chặn sao chép / dán trong đề. <b>Nhắc nhở cả khi luyện tập</b>: như trên, và luyện tập từng câu / sổ tay cũng được ghi nhận (chỉ nhắc, không tự nộp).</div></div>
+                    <div><label class="lbl" for="ac-limit">Số lần rời trang được phép (1–20)</label><input type="text" id="ac-limit" inputmode="numeric" placeholder="4"></div>
+                </div>
+                <h3 style="margin:14px 0 6px;">Cài đặt riêng từng lớp (không bắt buộc)</h3>
+                <div class="table-wrap"><table id="ac-class-table"></table></div>
+                <div style="margin-top:12px;"><button class="btn btn-accent" onclick="saveAc()">💾 Lưu cài đặt</button></div>
+            </div>
+            <div class="panel">
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                    <h2 style="margin:0;">Nhật ký rời trang</h2>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-ghost" onclick="loadAc()">🔄 Làm mới</button>
+                        <button class="btn btn-ghost" onclick="exportAcCsv()">⬇️ Xuất CSV nhật ký</button>
+                    </div>
+                </div>
+                <div class="tq-filter">
+                    <select id="ac-f-class" onchange="renderAcLog()" aria-label="Lọc theo lớp"></select>
+                    <label class="muted">Từ ngày <input type="date" id="ac-f-from" onchange="renderAcLog()"></label>
+                    <label class="muted">đến <input type="date" id="ac-f-to" onchange="renderAcLog()"></label>
+                </div>
+                <h3 style="margin:10px 0 6px;">Tổng hợp theo học sinh</h3>
+                <div class="table-wrap"><table id="ac-sum-table"></table></div>
+                <h3 style="margin:14px 0 6px;">Các lần rời trang gần đây</h3>
+                <div class="table-wrap" style="max-height:50vh; overflow:auto;"><table id="ac-log-table"></table></div>
+                <p class="muted" style="margin-top:8px;">Mỗi dòng là một lần học sinh quay lại trang sau khi rời đi. Dữ liệu lưu ở sheet <b>GiamSat</b> trong Google Sheet (bạn có thể xóa dòng ở đó để bắt đầu đợt mới). Học sinh có thể bị ghi nhận nhầm khi có cuộc gọi hoặc thông báo hệ thống, nên hãy xem thời gian rời và hỏi lại em trước khi kết luận.</p>
+            </div>
+        </div>
+
+        <!-- ============ THẺ 2: CÂU HỎI ============ -->
+        <div id="pane-questions" class="hidden">
+            <div class="panel">
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                    <h2 style="margin:0;">Câu hỏi <span class="muted" id="tq-count"></span></h2>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="btn btn-accent" onclick="openQForm(0)">➕ Thêm câu</button>
+                        <button class="btn btn-ghost" onclick="openBulkQ()">📋 Dán nhiều câu</button>
+                        <button class="btn btn-ghost" onclick="exportQuestionsCsv()" title="Tải các câu đang lọc (theo khối/lớp, Unit...) thành file để gửi hoặc nhập lại">⬇️ Xuất câu đang lọc</button>
+                        <button class="btn btn-ghost" id="regrade-btn" onclick="regradeAll()">🔁 Chấm lại bài đã nộp</button>
+                        <button class="btn btn-ghost hidden" id="seed-btn" onclick="seedQuestions()">📦 Nạp câu mẫu (76 câu)</button>
+                    </div>
+                </div>
+                <div id="tq-msg"></div>
+                <div class="tq-filter">
+                    <select id="tq-type" onchange="view.qType = this.value; view.qLimit = 100; renderQuestionsTab();" aria-label="Lọc theo dạng bài"></select>
+                    <select id="tq-scope" onchange="view.qScope = this.value; view.qLimit = 100; renderQuestionsTab();" aria-label="Lọc theo khối/lớp"></select>
+                    <select id="tq-unit" onchange="view.qUnit = this.value; view.qTopic = 'all'; view.qLimit = 100; renderQuestionsTab();" aria-label="Lọc theo Unit"></select>
+                    <select id="tq-topic" onchange="view.qTopic = this.value; view.qLimit = 100; renderQuestionsTab();" aria-label="Lọc theo chủ đề"></select>
+                    <input type="text" id="tq-search" placeholder="🔍 Tìm trong câu hỏi, đáp án, Unit, chủ đề..." oninput="view.qSearch = this.value; view.qLimit = 100; renderQuestionsTab();">
+                </div>
+                <div id="tq-sel-bar" class="hidden">
+                    <span id="tq-sel-text"></span>
+                    <button class="btn btn-accent btn-sm" onclick="openScopeForm()">👥 Gán khối / lớp</button>
+                    <button class="btn btn-accent btn-sm" onclick="openTagForm()">🏷️ Gán Unit / Chủ đề</button>
+                    <button class="btn btn-ghost btn-sm" onclick="clearSel()">Bỏ chọn</button>
+                </div>
+                <div class="table-wrap"><table id="tq-table"></table></div>
+                <p class="muted" style="margin-top:8px;">
+                    Học sinh thấy ngay câu mới khi tải lại trang. Nếu sửa <b>đáp án</b> của câu đã có học sinh làm, bấm
+                    <b>Chấm lại bài đã nộp</b> để điểm của mọi học sinh được tính theo đáp án mới.
+                    Câu bị <span class="tag bad">⚠</span> sẽ chưa hiện cho học sinh cho đến khi sửa xong.
+                </p>
+            </div>
+
+            <div class="panel">
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                    <h2 style="margin:0;">Mục từ điển (cho dạng Word entry) <span class="muted" id="te-count"></span></h2>
+                    <button class="btn btn-ghost" onclick="openEForm('')">➕ Thêm mục từ</button>
+                </div>
+                <div id="te-msg"></div>
+                <div class="table-wrap"><table id="te-table"></table></div>
+                <p class="muted" style="margin-top:8px;">Mục từ gồm: từ cần tra, phiên âm, từ loại, nghĩa và 3–5 câu ví dụ. Cụm 2–3 từ học sinh cần học viết giữa hai dấu <b>**</b> (ví dụ <b>**make a decision**</b>). Đáp án của câu Word entry phải là một cụm in đậm đó.</p>
+            </div>
+
+            <div class="panel">
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                    <h2 style="margin:0;">Gia đình từ (Sổ tay) <span class="muted" id="tf-count"></span></h2>
+                    <button class="btn btn-ghost" onclick="openFForm('')">➕ Thêm gia đình từ</button>
+                </div>
+                <div class="table-wrap"><table id="tf-table"></table></div>
+            </div>
+        </div>
+
+        <!-- ============ THẺ 3: LỚP HỌC ============ -->
+        <div id="pane-roster" class="hidden">
+            <div class="panel">
+                <h2>Thêm học sinh vào lớp</h2>
+                <div id="tr-msg"></div>
+                <div class="form-grid">
+                    <div>
+                        <label class="lbl" for="tr-cls">Tên lớp</label>
+                        <input type="text" id="tr-cls" list="tr-cls-list" placeholder="Ví dụ 9A1">
+                        <datalist id="tr-cls-list"></datalist>
+                        <div class="hint">Để trống nếu dán 2 cột <i>Lớp ⇥ Họ tên</i> (copy từ Excel).</div>
+                    </div>
+                    <div></div>
+                    <div class="full">
+                        <label class="lbl" for="tr-text">Danh sách họ tên (mỗi dòng một em)</label>
+                        <textarea id="tr-text" rows="9" placeholder="Nguyễn Văn An&#10;Lê Thị Hoa&#10;..."></textarea>
+                        <div class="hint">Số thứ tự đầu dòng tự bỏ; chữ IN HOA hoặc chữ thường toàn bộ tự đổi thành Viết Hoa Đầu Từ. Em nào đã có trong lớp sẽ được bỏ qua.</div>
+                    </div>
+                </div>
+                <div class="actions" style="margin-top:12px;"><button class="btn btn-accent" id="tr-btn" onclick="addRoster()">Thêm vào danh sách</button></div>
+            </div>
+            <div class="panel">
+                <h2>Danh sách hiện có <span class="muted" id="tr-count"></span></h2>
+                <div id="tr-list"></div>
+                <p class="muted" style="margin-top:8px;">
+                    <b>Mã học sinh</b> (không bắt buộc): nếu đặt mã, học sinh phải nhập thêm mã này mới vào được — dùng khi sợ bạn khác gõ tên hộ.
+                    Xóa học sinh khỏi danh sách thì em đó không vào làm bài được nữa (kết quả cũ vẫn còn trong Google Sheet).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hộp thoại dùng chung -->
+    <div id="modal" class="backdrop hidden"><div class="modal" id="modal-body"></div></div>
+
+    <script>
+        // ==========================================================================
+        // Dán URL Web App của Google Apps Script (kết thúc bằng /exec) vào dòng dưới đây.
+        // ==========================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbwye8DAY0R9qgINsulkAoJVCHzd2d4-ZzldcJZLS7LAaTM8tRd9BKzAnt17BdoW-Np3hA/exec";
+        const SITE_URL = (location.protocol.indexOf("http") === 0 ? location.origin + location.pathname.replace(/[^\/]*$/, "") : "");
+        const KEY_STORE = "wf9_teacher_key";
+
+        let teacherKey = "";
+        let DATA = null, DETAIL = null, TQ = null, TR = null, modalAction = null;
+        let timer = null;
+        const view = { cls: "", status: "", q: "", sortKey: "cls", sortDir: 1, allQ: false, qType: "all", qSearch: "", qUnit: "all", qTopic: "all", qLimit: 100, sel: {}, groupBy: "unit", khoi: "", qScope: "all" };
+
+        // ---------------------------------------------------------------- tiện ích
+
+        // ---------------------------------------------------------------- v5: dạng bài
+        const TYPE_LABEL = { dien_tu: "Điền từ", trac_nghiem: "Trắc nghiệm", viet_lai: "Viết lại câu", word_entry: "Word entry" };
+        const TYPE_ORDER = ["dien_tu", "trac_nghiem", "viet_lai", "word_entry"];
+        function qTypeOf(q) { return TYPE_LABEL[q && q.type] ? q.type : "dien_tu"; }
+        function typeTag(q) { const t = qTypeOf(q); return `<span class="tag t-${t}">${TYPE_LABEL[t]}</span>`; }
+        function qLabelOf(q) {
+            const t = qTypeOf(q);
+            if (t === "dien_tu") return q.root;
+            if (t === "word_entry") return "📖 " + (q.entry || "");
+            const sn = String(q.sentence || "").replace(/\*\*/g, "");
+            return sn.length > 46 ? sn.slice(0, 46) + "…" : sn;
+        }
+        function shortAns(a) { a = String(a || "").replace(/\*\*/g, ""); return a.length > 56 ? a.slice(0, 56) + "…" : a; }
+        function ansFull(q) {
+            if (q.answerFull) return q.answerFull;
+            if (qTypeOf(q) === "trac_nghiem" && q.opts) { const i = "ABCD".indexOf((q.answer || "").toUpperCase()); return i >= 0 ? q.answer + ". " + (q.opts[i] || "") : q.answer; }
+            return q.answer;
+        }
+        function richHtml(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>"); }
+        function rootCell(q) {
+            const t = qTypeOf(q);
+            if (t === "word_entry") return q.entry ? "📖 " + esc(q.entry) : '<span class="muted">—</span>';
+            return esc(q.root) || '<span class="muted">—</span>';
+        }
+
+        function esc(s) {
+            return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+        }
+
+        function fold(s) {
+            return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").toLowerCase();
+        }
+
+        function natCmp(a, b) {
+            return String(a).localeCompare(String(b), "vi", { numeric: true });
+        }
+
+        function total() { return (DATA && DATA.total) || 0; }
+
+        // ---------------------------------------------------------------- v7: khối / lớp
+        function khoiOf(cls) { const m = String(cls || "").match(/\d+/); return m ? String(parseInt(m[0], 10)) : ""; }
+        function classKey(s) { return fold(s).replace(/^(lop|class)\s*/, "").replace(/[\s.\-_]+/g, ""); }
+        function scopeTokens(sc) { return String(sc || "").split(/[|,;\n]+/).map(t => t.trim()).filter(Boolean); }
+        function scopeInfo(t) {
+            const raw = fold(t).replace(/\s+/g, "");
+            if (["tatca", "all", "chung", "moilop", "tatcacaclop", "moikhoi"].includes(raw)) return { kind: "all", key: "all" };
+            const m = /^(?:khoi|k)?(\d{1,2})$/.exec(raw);
+            if (m) return { kind: "khoi", key: String(parseInt(m[1], 10)) };
+            return { kind: "lop", key: classKey(t) };
+        }
+        // câu có "Áp dụng cho" = sc thì lớp cls được giao không (trống = mọi lớp)
+        function inScope(sc, cls) {
+            const toks = scopeTokens(sc);
+            if (!toks.length) return true;
+            const ck = classKey(cls), kh = khoiOf(cls);
+            return toks.some(t => { const i = scopeInfo(t); return i.kind === "all" || (i.kind === "khoi" ? (kh && i.key === kh) : i.key === ck); });
+        }
+        function nOf(s) { return s.n != null ? s.n : total(); }
+        function isAsg(s, i) { return !s.asg || s.asg[i] !== "0"; }
+        function allKhoi() {
+            const set = {};
+            (DATA ? DATA.classes : []).forEach(c => { const k = khoiOf(c); if (k) set[k] = 1; });
+            return Object.keys(set).sort((a, b) => a - b);
+        }
+        function selClasses() { return DATA.classes.filter(c => (!view.cls || c === view.cls) && (!view.khoi || khoiOf(c) === view.khoi)); }
+        function safeName(x) { return String(x).replace(/[^\w-]+/g, "_").replace(/^_+|_+$/g, ""); }
+        const isGood = v => v === "Đ" || v === "T+";
+        const isBad = v => v === "S" || v === "X" || v === "T-";
+        const el = id => document.getElementById(id);
+
+        function pct(x) { return Math.round(x * 100) + "%"; }
+
+        function ago(iso) {
+            if (!iso) return "—";
+            const t = new Date(iso).getTime();
+            if (isNaN(t)) return "—";
+            const m = Math.round((Date.now() - t) / 60000);
+            if (m < 1) return "vừa xong";
+            if (m < 60) return m + " phút trước";
+            const h = Math.round(m / 60);
+            if (h < 24) return h + " giờ trước";
+            const d = Math.round(h / 24);
+            return d + " ngày trước";
+        }
+
+        function statusOf(s) {
+            if (!s.loggedIn) return "none";
+            if (s.done === 0) return "idle";
+            if (nOf(s) > 0 && s.done >= nOf(s)) return "done";
+            return "doing";
+        }
+
+        const STATUS_LABEL = { none: "Chưa đăng nhập", idle: "Chưa làm", doing: "Đang làm", done: "Hoàn thành" };
+
+        function score1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+
+        // ---------------------------------------------------------------- gọi API
+        async function apiPost(payload) {
+            const ctrl = new AbortController();
+            const t = setTimeout(() => ctrl.abort(), 30000);
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST", redirect: "follow", signal: ctrl.signal,
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payload)
+                });
+                return await res.json();
+            } finally { clearTimeout(t); }
+        }
+
+        function apiConfigured() {
+            return /^https:\/\/script\.google\.com\/.+\/exec$/.test(API_URL);
+        }
+
+        // ---------------------------------------------------------------- đăng nhập giáo viên
+        function showGateError(msg) {
+            const el = document.getElementById("gate-error");
+            el.textContent = msg || "";
+            el.classList.toggle("hidden", !msg);
+        }
+
+        async function submitKey(ev) {
+            if (ev && ev.preventDefault) ev.preventDefault();
+            const key = document.getElementById("gate-key").value;
+            if (!key) { showGateError("Hãy nhập mật khẩu giáo viên."); return false; }
+            const btn = document.getElementById("gate-btn");
+            btn.disabled = true; btn.textContent = "Đang kiểm tra...";
+            showGateError("");
+            teacherKey = key;
+            const ok = await loadData(true);
+            btn.disabled = false; btn.textContent = "Mở bảng điều khiển";
+            if (ok) {
+                try { sessionStorage.setItem(KEY_STORE, key); } catch (e) {}
+                enterApp();
+            }
+            return false;
+        }
+
+        function logoutTeacher() {
+            try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
+            teacherKey = ""; DATA = null;
+            if (timer) clearInterval(timer);
+            location.reload();
+        }
+
+        // ---------------------------------------------------------------- tải dữ liệu
+        async function loadData(fromGate) {
+            const btn = document.getElementById("refresh-btn");
+            if (btn) { btn.disabled = true; }
+            try {
+                const r = await apiPost({ action: "dashboard", key: teacherKey });
+                if (!r || !r.ok) {
+                    if (r && r.error === "BAD_KEY") {
+                        if (fromGate) showGateError("Mật khẩu chưa đúng.");
+                        else logoutTeacher();
+                    } else {
+                        const msg = "Máy chủ báo lỗi" + (r && r.message ? ": " + r.message : ".");
+                        if (fromGate) showGateError(msg); else showLoadError(msg);
+                    }
+                    return false;
+                }
+                DATA = r; DETAIL = null;
+                showLoadError("");
+                buildClassSelect();
+                render();
+                const when = new Date(r.generated);
+                document.getElementById("updated-at").textContent =
+                    "Cập nhật lúc " + (isNaN(when) ? r.generated : when.toLocaleTimeString("vi-VN") + " " + when.toLocaleDateString("vi-VN"));
+                return true;
+            } catch (e) {
+                const msg = "Không kết nối được máy chủ. Kiểm tra mạng hoặc URL Web App.";
+                if (fromGate) showGateError(msg); else showLoadError(msg);
+                return false;
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function showLoadError(msg) {
+            const el = document.getElementById("load-error");
+            el.textContent = msg || "";
+            el.classList.toggle("hidden", !msg);
+        }
+
+        function startAutoRefresh() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                if (document.getElementById("auto-refresh").checked && !document.hidden) loadData();
+            }, 60000);
+        }
+
+        // ---------------------------------------------------------------- bộ lọc
+        function buildClassSelect() {
+            const ks = document.getElementById("f-khoi");
+            const kl = allKhoi();
+            ks.innerHTML = '<option value="">Tất cả các khối</option>' + kl.map(k => `<option value="${k}">Khối ${k}</option>`).join("");
+            if (!kl.includes(view.khoi)) view.khoi = "";
+            ks.value = view.khoi;
+            ks.classList.toggle("hidden", kl.length < 2);
+            const sel = document.getElementById("f-class");
+            const cur = view.cls;
+            const list = DATA.classes.filter(c => !view.khoi || khoiOf(c) === view.khoi);
+            sel.innerHTML = '<option value="">Tất cả các lớp' + (view.khoi ? " của khối " + view.khoi : "") + '</option>' +
+                list.map(c => `<option value="${esc(c)}">Lớp ${esc(c)}</option>`).join("");
+            sel.value = list.includes(cur) ? cur : "";
+            view.cls = sel.value;
+        }
+
+        function setKhoi(k) { view.khoi = k; view.cls = ""; buildClassSelect(); render(); }
+        function setClass(c) { view.cls = c; document.getElementById("f-class").value = c; render(); }
+
+        function filtered() {
+            const q = fold(view.q.trim());
+            return DATA.students.filter(s =>
+                (!view.khoi || khoiOf(s.cls) === view.khoi) &&
+                (!view.cls || s.cls === view.cls) &&
+                (!view.status || statusOf(s) === view.status) &&
+                (!q || fold(s.name).includes(q))
+            );
+        }
+
+        function inClass() {
+            return DATA.students.filter(s => (!view.khoi || khoiOf(s.cls) === view.khoi) && (!view.cls || s.cls === view.cls));
+        }
+
+        // ---------------------------------------------------------------- hiển thị
+        function render() {
+            if (!DATA) return;
+            const list = filtered();
+            document.getElementById("count-label").textContent = list.length + " / " + DATA.students.length + " học sinh";
+            renderKpis();
+            renderClassTable();
+            renderStudents(list);
+            renderQuestions();
+            renderTypeStats();
+            renderGroupStats();
+            renderMissing();
+        }
+
+        function renderKpis() {
+            const scope = inClass();
+            const logged = scope.filter(s => s.loggedIn).length;
+            const started = scope.filter(s => s.done > 0);
+            const finished = scope.filter(s => nOf(s) > 0 && s.done >= nOf(s)).length;
+            const avgScore = started.length ? started.reduce((a, s) => a + s.score, 0) / started.length : 0;
+            const ns = {}; scope.forEach(s => { ns[nOf(s)] = 1; });
+            const nk = Object.keys(ns);
+            const finLabel = nk.length === 1 ? "Đã làm hết " + nk[0] + " câu" : "Đã làm hết bộ câu được giao";
+            const where = view.cls ? "lớp " + view.cls : view.khoi ? "khối " + view.khoi : "toàn trường";
+            const cards = [
+                ["Sĩ số", scope.length, where],
+                ["Đã đăng nhập", logged, scope.length ? pct(logged / scope.length) : "—"],
+                ["Đã làm ≥ 1 câu", started.length, scope.length ? pct(started.length / scope.length) : "—"],
+                [finLabel, finished, scope.length ? pct(finished / scope.length) : "—"],
+                ["Điểm TB (thang 10)", started.length ? score1(avgScore) : "—", "trên các em đã làm"]
+            ];
+            document.getElementById("kpis").innerHTML = cards.map(c =>
+                `<div class="kpi"><div class="label">${c[0]}</div><div class="val">${c[1]}</div><div class="sub">${c[2]}</div></div>`
+            ).join("");
+        }
+
+        function renderClassTable() {
+            const panel = document.getElementById("class-panel");
+            panel.classList.toggle("hidden", !!view.cls);
+            if (view.cls) return;
+            const rows = selClasses().map(c => {
+                const sc = DATA.students.filter(s => s.cls === c);
+                const started = sc.filter(s => s.done > 0);
+                const avgProg = sc.length ? sc.reduce((a, s) => a + (nOf(s) ? s.done / nOf(s) : 0), 0) / sc.length : 0;
+                const avgSc = started.length ? started.reduce((a, s) => a + s.score, 0) / started.length : 0;
+                const nq = sc.length ? nOf(sc[0]) : 0;
+                return `<tr class="clickable" data-cls="${esc(c)}" onclick="setClass(this.dataset.cls)">
+                    <td><b>${esc(c)}</b></td>
+                    <td class="num">${sc.length}</td>
+                    <td class="num">${nq}</td>
+                    <td class="num">${sc.filter(s => s.loggedIn).length}</td>
+                    <td class="num">${started.length}</td>
+                    <td class="num">${sc.filter(s => nOf(s) > 0 && s.done >= nOf(s)).length}</td>
+                    <td><span class="bar"><i style="width:${Math.round(avgProg * 100)}%"></i></span> ${pct(avgProg)}</td>
+                    <td class="num"><b>${started.length ? score1(avgSc) : "—"}</b></td>
+                </tr>`;
+            }).join("");
+            document.getElementById("class-table").innerHTML =
+                `<thead><tr><th>Lớp</th><th>Sĩ số</th><th>Số câu giao</th><th>Đã đăng nhập</th><th>Đã làm</th><th>Hoàn thành</th><th>Tiến độ TB</th><th>Điểm TB</th></tr></thead><tbody>${rows}</tbody>`;
+        }
+
+        const COLUMNS = [
+            { key: "cls", label: "Lớp" },
+            { key: "name", label: "Họ và tên" },
+            { key: "status", label: "Trạng thái" },
+            { key: "done", label: "Tiến độ" },
+            { key: "correct", label: "Đúng" },
+            { key: "wrong", label: "Sai" },
+            { key: "score", label: "Điểm /10" },
+            { key: "attempts", label: "Lượt" },
+            { key: "lv", label: "Rời trang" },
+            { key: "last", label: "Lần cuối" },
+            { key: "strip", label: "Từng câu", nosort: true }
+        ];
+
+        function fmtSecs(n) { n = Math.round(n || 0); return n < 60 ? n + " giây" : Math.floor(n / 60) + " phút " + (n % 60) + " giây"; }
+        function lvCell(s) {
+            if (!s.lv) return s.acm && s.acm !== "free" ? '<span class="muted">0</span>' : '<span class="muted">—</span>';
+            return `<span class="tag ${s.aus ? "bad" : "idle"}" title="${s.lv} lần rời trang, tổng ${esc(fmtSecs(s.lsec))}${s.aus ? ", " + s.aus + " bài tự nộp" : ""}">${s.lv} lần · ${esc(fmtSecs(s.lsec))}${s.aus ? " · tự nộp" : ""}</span>`;
+        }
+
+        function sortValue(s, key) {
+            switch (key) {
+                case "status": return ["none", "idle", "doing", "done"].indexOf(statusOf(s));
+                case "last": return s.last ? new Date(s.last).getTime() : 0;
+                default: return s[key];
+            }
+        }
+
+        function sortBy(key) {
+            if (view.sortKey === key) view.sortDir = -view.sortDir;
+            else { view.sortKey = key; view.sortDir = (key === "cls" || key === "name") ? 1 : -1; }
+            render();
+        }
+
+        const STRIP = { "Đ": ["c", "đúng"], "S": ["w", "sai"], "X": ["r", "xem đáp án"] };
+
+        function stripHtml(s) {
+            let out = "";
+            for (let i = 0; i < total(); i++) {
+                if (!isAsg(s, i)) continue;
+                const ch = s.states[i] || "";
+                const m = STRIP[ch] || ["", "chưa làm"];
+                const q = DATA.questions[i] || { id: i + 1, root: "" };
+                out += `<i class="${m[0]}" title="Câu ${q.id} · ${TYPE_LABEL[qTypeOf(q)]} (${esc(qLabelOf(q))}): ${m[1]}"></i>`;
+            }
+            return `<span class="strip">${out}</span>`;
+        }
+
+        function renderStudents(list) {
+            const key = view.sortKey, dir = view.sortDir;
+            const sorted = list.slice().sort((a, b) => {
+                const va = sortValue(a, key), vb = sortValue(b, key);
+                let c;
+                if (typeof va === "string" || typeof vb === "string") c = natCmp(va, vb);
+                else c = va - vb;
+                if (c === 0) c = natCmp(a.cls, b.cls) || natCmp(a.name, b.name);
+                return c * dir;
+            });
+            const head = COLUMNS.map(c =>
+                `<th class="${c.key === key ? "sorted" : ""}" ${c.nosort ? "" : `onclick="sortBy('${c.key}')"`}>${c.label}${c.key === key ? (dir > 0 ? " ▲" : " ▼") : ""}</th>`
+            ).join("");
+            const body = sorted.map(s => {
+                const st = statusOf(s);
+                return `<tr>
+                    <td>${esc(s.cls)}</td>
+                    <td><b class="lnk" style="cursor:pointer;" data-cls="${esc(s.cls)}" data-name="${esc(s.name)}" onclick="openStudent(this.dataset.cls, this.dataset.name)" title="Xem bài làm từng câu">${esc(s.name)}</b></td>
+                    <td><span class="tag ${st}">${STATUS_LABEL[st]}</span></td>
+                    <td><span class="bar"><i style="width:${nOf(s) ? Math.round(s.done / nOf(s) * 100) : 0}%"></i></span> ${s.done}/${nOf(s)}</td>
+                    <td class="num">${s.correct}</td>
+                    <td class="num">${s.wrong}</td>
+                    <td class="num"><b>${s.done ? score1(s.score) : "—"}</b></td>
+                    <td class="num">${s.attempts}</td>
+                    <td>${lvCell(s)}</td>
+                    <td>${ago(s.last)}</td>
+                    <td>${stripHtml(s)}</td>
+                </tr>`;
+            }).join("");
+            document.getElementById("student-table").innerHTML =
+                `<thead><tr>${head}</tr></thead><tbody>${body || '<tr><td colspan="12" class="muted" style="text-align:center;padding:20px;">Không có học sinh nào khớp bộ lọc.</td></tr>'}</tbody>`;
+        }
+
+        function questionStats() {
+            const scope = inClass();
+            const cl = selClasses();
+            return DATA.questions.map((q, i) => {
+                let answered = 0, wrong = 0;
+                scope.forEach(s => {
+                    const ch = s.states[i];
+                    if (isGood(ch)) answered++;
+                    else if (isBad(ch)) { answered++; wrong++; }
+                });
+                return { id: q.id, type: qTypeOf(q), root: qLabelOf(q), answer: ansFull(q), hasKey: q.hasKey, unit: q.unit || "", topic: q.topic || "", answered, wrong, rate: answered ? wrong / answered : 0, inScope: !scopeTokens(q.scope).length || cl.some(c => inScope(q.scope, c)) };
+            }).filter(x => x.inScope);
+        }
+
+        function renderTypeStats() {
+            const st = questionStats();
+            const present = TYPE_ORDER.filter(t => st.some(q => q.type === t));
+            const panel = el("type-panel");
+            panel.classList.toggle("hidden", present.length < 2);
+            if (present.length < 2) return;
+            el("type-list").innerHTML = present.map(t => {
+                const qs = st.filter(q => q.type === t);
+                const answered = qs.reduce((a, q) => a + q.answered, 0), wrong = qs.reduce((a, q) => a + q.wrong, 0);
+                const good = answered - wrong, rate = answered ? good / answered : 0;
+                return `<div class="t-row"><div><span class="tag t-${t}">${TYPE_LABEL[t]}</span></div>
+                    <div class="muted">${qs.length} câu · ${answered ? good + "/" + answered + " lượt làm đúng" : "chưa có bài làm"}</div>
+                    <div><span class="bar"><i style="width:${Math.round(rate * 100)}%"></i></span></div>
+                    <div class="num" style="text-align:right;">${answered ? pct(rate) : "—"}</div></div>`;
+            }).join("");
+        }
+
+        const NO_UNIT = "Chưa phân Unit", NO_TOPIC = "Chưa phân chủ đề";
+        function unitRank(u) {
+            if (u === NO_UNIT) return [3, 0];
+            const m = /^unit\s*(\d+)/i.exec(u);
+            return m ? [0, parseInt(m[1], 10)] : [1, 0];
+        }
+        function cmpUnit(a, b) { const x = unitRank(a), y = unitRank(b); return (x[0] - y[0]) || (x[1] - y[1]) || a.localeCompare(b, "vi"); }
+        function setGroupBy(k) { view.groupBy = k; renderGroupStats(); }
+        function renderGroupStats() {
+            const panel = el("group-panel");
+            const st = questionStats();
+            const keyOf = q => view.groupBy === "unit" ? (q.unit || NO_UNIT) : (q.topic || NO_TOPIC);
+            const any = st.some(q => q.unit || q.topic);
+            panel.classList.toggle("hidden", !any);
+            if (!any) return;
+            el("grp-unit").classList.toggle("on", view.groupBy === "unit");
+            el("grp-topic").classList.toggle("on", view.groupBy === "topic");
+            const groups = {};
+            st.forEach(q => { (groups[keyOf(q)] = groups[keyOf(q)] || []).push(q); });
+            const none = view.groupBy === "unit" ? NO_UNIT : NO_TOPIC;
+            const names = Object.keys(groups).sort(view.groupBy === "unit" ? cmpUnit : (a, b) => (a === none) - (b === none) || a.localeCompare(b, "vi"));
+            el("group-list").innerHTML = names.map(n => {
+                const qs = groups[n];
+                const answered = qs.reduce((a, q) => a + q.answered, 0), wrong = qs.reduce((a, q) => a + q.wrong, 0);
+                const good = answered - wrong, rate = answered ? good / answered : 0;
+                const weak = answered > 0 && rate < 0.5;
+                return `<div class="g-row"><div><b>${esc(n)}</b></div>
+                    <div><span class="bar ${weak ? "bad" : ""}"><i style="width:${Math.round(rate * 100)}%"></i></span></div>
+                    <div class="muted">${qs.length} câu · ${answered ? good + "/" + answered + " lượt đúng" : "chưa có bài làm"}</div>
+                    <div class="num" style="text-align:right;">${answered ? (weak ? "⚠ " : "") + pct(rate) : "—"}</div></div>`;
+            }).join("");
+        }
+
+        function renderQuestions() {
+            const stats = questionStats().filter(q => q.answered > 0)
+                .sort((a, b) => b.rate - a.rate || b.wrong - a.wrong || a.id - b.id);
+            const shown = view.allQ ? stats : stats.slice(0, 10);
+            document.getElementById("q-list").innerHTML = shown.length
+                ? shown.map(q => `<div class="q-row">
+                        <div><b>Câu ${q.id}</b></div>
+                        <div><span class="tag t-${q.type}">${TYPE_LABEL[q.type]}</span> ${esc(q.root)} <span class="muted">→ ${esc(shortAns(q.answer))}</span></div>
+                        <div><span class="bar bad"><i style="width:${Math.round(q.rate * 100)}%"></i></span></div>
+                        <div class="num" style="text-align:right;">${q.wrong}/${q.answered}</div>
+                    </div>`).join("")
+                : '<p class="muted">Chưa có học sinh nào làm bài.</p>';
+            const t = document.getElementById("q-toggle");
+            t.classList.toggle("hidden", stats.length <= 10);
+            t.textContent = view.allQ ? "Chỉ hiện 10 câu sai nhiều nhất" : "Xem tất cả " + stats.length + " câu";
+        }
+
+        function chipsHtml(list) {
+            if (!list.length) return '<span class="muted">Không có ✔️</span>';
+            return list.map(s => `<span class="chip">${esc(s.name)}<small>${esc(s.cls)}</small></span>`).join("");
+        }
+
+        function renderMissing() {
+            const scope = inClass();
+            const none = scope.filter(s => statusOf(s) === "none");
+            const idle = scope.filter(s => statusOf(s) === "idle");
+            document.getElementById("n-none").textContent = none.length;
+            document.getElementById("n-idle").textContent = idle.length;
+            document.getElementById("list-none").innerHTML = chipsHtml(none);
+            document.getElementById("list-idle").innerHTML = chipsHtml(idle);
+        }
+
+        // ---------------------------------------------------------------- xuất CSV
+        function buildCsv(list) {
+            const cols = [];
+            for (let i = 0; i < total(); i++) if (list.some(s => isAsg(s, i))) cols.push(i);
+            const head = ["Lớp", "Họ và tên", "Trạng thái", "Đã làm", "Số câu giao", "Đúng", "Sai", "Điểm/10", "Tổng lượt", "Lần cuối", "Số lần rời trang", "Giây rời trang", "Số lần tự nộp"];
+            cols.forEach(i => head.push("Câu " + DATA.questions[i].id));
+            const cell = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+            const rows = list.map(s => {
+                const r = [s.cls, s.name, STATUS_LABEL[statusOf(s)], s.done, nOf(s), s.correct, s.wrong,
+                    s.done ? String(s.score).replace(".", ",") : "", s.attempts, s.last || "", s.lv || 0, s.lsec || 0, s.aus || 0];
+                cols.forEach(i => r.push(isAsg(s, i) ? (s.states[i] || "") : ""));
+                return r.map(cell).join(",");
+            });
+            return "﻿" + [head.map(cell).join(",")].concat(rows).join("\r\n");
+        }
+
+        function csvSuffix() { return view.cls ? "-" + safeName(view.cls) : (view.khoi ? "-khoi-" + view.khoi : ""); }
+
+        function exportCsv() {
+            if (!DATA) return;
+            downloadCsv(buildCsv(filtered()), "ket-qua-word-form-9" + csvSuffix() + ".csv");
+        }
+
+        // mỗi lớp đang hiển thị một file riêng (để gửi cho từng lớp / giáo viên chủ nhiệm)
+        function exportEachClass() {
+            if (!DATA) return;
+            const cls = selClasses();
+            if (!cls.length) return;
+            let i = 0;
+            const next = () => {
+                if (i >= cls.length) return;
+                const c = cls[i++];
+                downloadCsv(buildCsv(DATA.students.filter(s => s.cls === c)), "ket-qua-word-form-9-" + safeName(c) + ".csv");
+                setTimeout(next, 700);
+            };
+            next();
+        }
+
+
+        // ==========================================================================
+        // PHẦN BỔ SUNG: THẺ, CÂU HỎI, LỚP HỌC, BÀI LÀM TỪNG HỌC SINH
+        // ==========================================================================
+        function enterApp() {
+            el("gate").classList.add("hidden");
+            el("app").classList.remove("hidden");
+            el("student-link").href = SITE_URL || API_URL;
+            startAutoRefresh();
+            loadQuestions();
+        }
+
+        function showTab(t) {
+            ["results", "questions", "roster", "links", "ac"].forEach(x => {
+                el("pane-" + x).classList.toggle("hidden", x !== t);
+                el("tab-" + x).classList.toggle("active", x === t);
+            });
+            if (t === "questions") loadQuestions();
+            if (t === "roster") loadRoster();
+            if (t === "links") renderLinks();
+            if (t === "ac") loadAc();
+        }
+
+        // gọi API có khóa giáo viên
+        async function tapi(action, extra) {
+            const r = await apiPost(Object.assign({ action: action, key: teacherKey }, extra || {}));
+            if (r && r.error === "BAD_KEY") { logoutTeacher(); throw new Error("BAD_KEY"); }
+            return r;
+        }
+
+        function msgBox(id, text, kind) {
+            const box = el(id);
+            if (!box) return;
+            box.innerHTML = text ? `<div class="${kind === "ok" ? "ok-box" : kind === "warn" ? "warn-box" : "error-box"}">${esc(text)}</div>` : "";
+        }
+
+        function openModal(html) { el("modal-body").innerHTML = html; el("modal").classList.remove("hidden"); }
+        function closeModal() { el("modal").classList.add("hidden"); el("modal-body").innerHTML = ""; modalAction = null; }
+
+        function confirmBox(text, label, fn) {
+            modalAction = fn;
+            openModal(`<h3>Xác nhận</h3><p style="white-space:pre-wrap;">${esc(text)}</p>
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-danger" onclick="const f = modalAction; closeModal(); if (f) f();">${esc(label)}</button></div>`);
+        }
+
+        // ---------------------------------------------------------------- CÂU HỎI
+        async function loadQuestions() {
+            try {
+                const r = await tapi("tq_list");
+                if (!r || !r.ok) { msgBox("tq-msg", "Chưa tải được danh sách câu hỏi."); return; }
+                TQ = r; renderQuestionsTab();
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("tq-msg", "Không kết nối được máy chủ."); }
+        }
+
+        function blankHtml(sentence) { return richHtml(sentence).replace(/_{3,}/, '<span class="blank">______</span>'); }
+
+        // câu q có thuộc bộ lọc khối/lớp v không (all | blank | k<khối> | c<lớp>)
+        function scopeOk(q, v) {
+            if (!v || v === "all") return true;
+            const toks = scopeTokens(q.scope);
+            if (v === "blank") return !toks.length;
+            if (!toks.length) return true;
+            if (v[0] === "c") return inScope(q.scope, v.slice(1));
+            const k = v.slice(1);
+            return toks.some(t => { const i = scopeInfo(t); return i.kind === "all" || (i.kind === "khoi" ? i.key === k : khoiOf(t) === k); });
+        }
+        function scopeCell(q) {
+            const toks = scopeTokens(q.scope);
+            if (!toks.length) return '<span class="muted" style="font-size:0.78rem;">mọi lớp</span>';
+            return toks.map(t => { const i = scopeInfo(t); return `<span class="scope-chip">${i.kind === "khoi" ? "Khối " + i.key : i.kind === "all" ? "Mọi lớp" : "Lớp " + esc(t)}</span>`; }).join("");
+        }
+        function filteredQs() {
+            const uOf = q => q.unit || NO_UNIT, tOf = q => q.topic || NO_TOPIC;
+            const needle = fold(view.qSearch.trim());
+            return (TQ ? TQ.questions : []).filter(q => (view.qType === "all" || (view.qType === "bad" ? !!q.problem : qTypeOf(q) === view.qType)) &&
+                (view.qUnit === "all" || uOf(q) === view.qUnit) && (view.qTopic === "all" || tOf(q) === view.qTopic) && scopeOk(q, view.qScope) &&
+                (!needle || fold([q.sentence, q.root, q.answer, q.alts, q.entry, q.unit, q.topic].join(" ")).includes(needle)));
+        }
+
+        function renderQuestionsTab() {
+            if (!TQ) return;
+            const qs = TQ.questions, bad = qs.filter(q => q.problem).length;
+            el("tq-count").textContent = "(" + qs.length + " câu" + (bad ? ", " + bad + " câu cần sửa" : "") + ")";
+            const bd = el("q-badge");
+            bd.textContent = bad; bd.classList.toggle("hidden", !bad);
+            el("seed-btn").classList.toggle("hidden", qs.length > 0);
+
+            // bộ lọc dạng bài
+            const sel = el("tq-type");
+            const counts = {}; qs.forEach(q => { const t = qTypeOf(q); counts[t] = (counts[t] || 0) + 1; });
+            sel.innerHTML = '<option value="all">Tất cả dạng bài (' + qs.length + ')</option>' +
+                TYPE_ORDER.map(t => `<option value="${t}">${TYPE_LABEL[t]} (${counts[t] || 0})</option>`).join("") +
+                (bad ? `<option value="bad">⚠ Câu cần sửa (${bad})</option>` : "");
+            sel.value = (view.qType === "all" || counts[view.qType] !== undefined || (view.qType === "bad" && bad)) ? view.qType : "all";
+            if (sel.value !== view.qType) view.qType = sel.value;
+
+            // bộ lọc khối / lớp
+            const sSel = el("tq-scope");
+            const kSet = {};
+            (TQ.classes || (DATA ? DATA.classes : []) || []).forEach(c => { const k = khoiOf(c); if (k) kSet[k] = 1; });
+            qs.forEach(q => scopeTokens(q.scope).forEach(t => { const i = scopeInfo(t); if (i.kind === "khoi") kSet[i.key] = 1; }));
+            const kList = Object.keys(kSet).sort((a, b) => a - b);
+            const cList = (TQ.classes || (DATA ? DATA.classes : []) || []);
+            const nBlank = qs.filter(q => !scopeTokens(q.scope).length).length;
+            sSel.innerHTML = '<option value="all">Mọi khối / lớp (' + qs.length + ')</option>' +
+                '<option value="blank">Chưa gán: mọi lớp đều thấy (' + nBlank + ')</option>' +
+                kList.map(k => `<option value="k${k}">Khối ${k}: được giao (${qs.filter(q => scopeOk(q, "k" + k)).length})</option>`).join("") +
+                cList.map(c => `<option value="c${esc(c)}">Lớp ${esc(c)}: được giao (${qs.filter(q => scopeOk(q, "c" + c)).length})</option>`).join("");
+            const okVals = ["all", "blank"].concat(kList.map(k => "k" + k)).concat(cList.map(c => "c" + c));
+            if (!okVals.includes(view.qScope)) view.qScope = "all";
+            sSel.value = view.qScope;
+
+            // bộ lọc Unit / chủ đề (đếm theo toàn bộ câu; chủ đề phụ thuộc Unit đang chọn)
+            const uOf = q => q.unit || NO_UNIT, tOf = q => q.topic || NO_TOPIC;
+            const uCount = {}; qs.forEach(q => { uCount[uOf(q)] = (uCount[uOf(q)] || 0) + 1; });
+            const uNames = Object.keys(uCount).sort(cmpUnit);
+            const uSel = el("tq-unit");
+            uSel.innerHTML = '<option value="all">Mọi Unit</option>' + uNames.map(u => `<option value="${esc(u)}">${esc(u)} (${uCount[u]})</option>`).join("");
+            if (view.qUnit !== "all" && uCount[view.qUnit] === undefined) view.qUnit = "all";
+            uSel.value = view.qUnit;
+            const inU = qs.filter(q => view.qUnit === "all" || uOf(q) === view.qUnit);
+            const tCount = {}; inU.forEach(q => { tCount[tOf(q)] = (tCount[tOf(q)] || 0) + 1; });
+            const tNames = Object.keys(tCount).sort((a, b) => (a === NO_TOPIC) - (b === NO_TOPIC) || a.localeCompare(b, "vi"));
+            const tSel = el("tq-topic");
+            tSel.innerHTML = '<option value="all">Mọi chủ đề</option>' + tNames.map(n => `<option value="${esc(n)}">${esc(n)} (${tCount[n]})</option>`).join("");
+            if (view.qTopic !== "all" && tCount[view.qTopic] === undefined) view.qTopic = "all";
+            tSel.value = view.qTopic;
+
+            const needle = fold(view.qSearch.trim());
+            const allFiltered = qs.filter(q => (view.qType === "all" || (view.qType === "bad" ? !!q.problem : qTypeOf(q) === view.qType)) &&
+                (view.qUnit === "all" || uOf(q) === view.qUnit) && (view.qTopic === "all" || tOf(q) === view.qTopic) && scopeOk(q, view.qScope) &&
+                (!needle || fold([q.sentence, q.root, q.answer, q.alts, q.entry, q.unit, q.topic].join(" ")).includes(needle)));
+            const shownQs = allFiltered.slice(0, view.qLimit);
+            // chọn nhiều câu để gán Unit / chủ đề
+            Object.keys(view.sel).forEach(k => { if (!qs.some(q => String(q.id) === k)) delete view.sel[k]; });
+            const nSel = Object.keys(view.sel).length;
+            el("tq-sel-bar").classList.toggle("hidden", nSel === 0);
+            el("tq-sel-text").innerHTML = "Đã chọn <b>" + nSel + "</b> câu";
+            const allChecked = allFiltered.length > 0 && allFiltered.every(q => view.sel[q.id]);
+
+            const head = `<thead><tr><th><input type="checkbox" title="Chọn / bỏ chọn tất cả câu đang lọc (${allFiltered.length})" ${allChecked ? "checked" : ""} onchange="toggleSelAll(this.checked)"></th><th>#</th><th>Dạng</th><th>Câu hỏi</th><th>Từ gốc / gợi ý / mục từ</th><th>Đáp án</th><th>Unit · Chủ đề</th><th>Áp dụng cho</th><th>Trạng thái</th><th></th></tr></thead>`;
+            const body = shownQs.map(q => {
+                const t = qTypeOf(q);
+                const st = q.problem ? `<span class="tag bad" title="${esc(q.problem)}">⚠ ${esc(q.problem)}</span>`
+                    : q.hidden ? '<span class="tag off">Đang ẩn</span>' : '<span class="tag ok">Đang dùng</span>';
+                const alts = q.alts ? ` <span class="muted">(hoặc ${esc(q.alts)})</span>` : "";
+                const opts = t === "trac_nghiem" && q.opts ? `<div class="muted" style="font-size:0.8rem;margin-top:3px;">${q.opts.map((o, i) => o ? "ABCD"[i] + ". " + richHtml(o) : "").filter(Boolean).join(" &nbsp;·&nbsp; ")}</div>` : "";
+                const fam = t === "dien_tu" && q.family ? `<div class="muted" style="font-size:0.78rem;">🌳 ${esc(q.family)}</div>` : "";
+                const ut = (q.unit || q.topic) ? `<div class="tq-unit">${q.unit ? '<span class="u">' + esc(q.unit) + '</span>' : '<span class="muted">chưa gán Unit</span>'}${q.topic ? '<br>' + esc(q.topic) : ""}</div>` : '<span class="muted" style="font-size:0.78rem;">chưa gán</span>';
+                return `<tr class="${q.hidden ? "hid" : ""}">
+                    <td><input type="checkbox" ${view.sel[q.id] ? "checked" : ""} onchange="toggleSel(${q.id}, this.checked)"></td>
+                    <td><b>${q.id}</b></td>
+                    <td>${typeTag(q)}</td>
+                    <td class="wrap">${blankHtml(q.sentence)}${opts}</td>
+                    <td>${rootCell(q)}${fam}</td>
+                    <td>${q.answer ? "<b>" + (t === "trac_nghiem" ? richHtml(ansFull(Object.assign({}, q, { answerFull: "" }))) : esc(q.answer)) + "</b>" : '<span class="muted">—</span>'}${alts}</td>
+                    <td>${ut}</td>
+                    <td>${scopeCell(q)}</td>
+                    <td>${st}</td>
+                    <td><div class="row-actions">
+                        <button class="btn btn-ghost btn-sm" title="Sửa câu này" onclick="openQForm(${q.id})">✏️</button>
+                        <button class="btn btn-ghost btn-sm" title="${q.hidden ? "Hiện lại cho học sinh" : "Ẩn khỏi học sinh"}" onclick="toggleHide(${q.id})">${q.hidden ? "👁" : "🙈"}</button>
+                        <button class="btn btn-danger btn-sm" title="Xóa câu này" onclick="askDeleteQ(${q.id})">🗑</button>
+                    </div></td></tr>`;
+            }).join("");
+            const more = allFiltered.length > shownQs.length
+                ? `<tr><td colspan="10" style="text-align:center;padding:12px;"><button class="btn btn-ghost" onclick="view.qLimit += 100; renderQuestionsTab();">Hiện thêm (còn ${allFiltered.length - shownQs.length} câu)</button></td></tr>` : "";
+            el("tq-table").innerHTML = head + "<tbody>" + (body || `<tr><td colspan="10" class="muted" style="text-align:center;padding:20px;">${qs.length ? "Không có câu nào khớp bộ lọc." : "Chưa có câu hỏi. Bấm “Thêm câu”, “Dán nhiều câu” hoặc “Nạp câu mẫu”."}</td></tr>`) + more + "</tbody>";
+            el("tq-count").textContent = "(" + qs.length + " / " + (TQ.maxQ || 800) + " câu" + (bad ? ", " + bad + " câu cần sửa" : "") + (allFiltered.length !== qs.length ? "; đang lọc " + allFiltered.length : "") + ")";
+
+            // mục từ điển
+            const en = TQ.entries || [];
+            const used = {}; qs.forEach(q => { if (q.entry) used[q.entry.toLowerCase()] = (used[q.entry.toLowerCase()] || 0) + 1; });
+            el("te-count").textContent = "(" + en.length + " mục từ)";
+            el("te-table").innerHTML = "<thead><tr><th>Từ</th><th>Loại</th><th>Nghĩa</th><th>Ví dụ</th><th>Số câu dùng</th><th></th></tr></thead><tbody>" +
+                (en.map(e => `<tr><td><b>${esc(e.name)}</b><div class="muted" style="font-size:0.78rem;">${esc(e.ipa)}</div></td><td>${esc(e.pos)}</td>
+                    <td class="wrap">${esc((e.defs || []).join(" ; ").slice(0, 110))}</td>
+                    <td class="wrap">${(e.examples || []).length} câu</td>
+                    <td>${used[e.name.toLowerCase()] || 0}</td>
+                    <td><div class="row-actions">
+                        <button class="btn btn-ghost btn-sm" title="Sửa" data-n="${esc(e.name)}" onclick="openEForm(this.dataset.n)">✏️</button>
+                        <button class="btn btn-danger btn-sm" title="Xóa" data-n="${esc(e.name)}" onclick="askDeleteE(this.dataset.n)">🗑</button>
+                    </div></td></tr>`).join("") || '<tr><td colspan="6" class="muted" style="text-align:center;padding:16px;">Chưa có mục từ nào. Cần có mục từ trước khi soạn câu Word entry.</td></tr>') + "</tbody>";
+
+            const fam = TQ.families;
+            el("tf-count").textContent = "(" + fam.length + " nhóm)";
+            el("tf-table").innerHTML = "<thead><tr><th>Từ gốc</th><th>Nội dung</th><th></th></tr></thead><tbody>" +
+                (fam.map(f => `<tr><td><b>${esc(f.name)}</b></td>
+                    <td class="wrap">${esc(f.content.length > 140 ? f.content.slice(0, 140) + "…" : f.content)}</td>
+                    <td><div class="row-actions">
+                        <button class="btn btn-ghost btn-sm" title="Sửa" data-n="${esc(f.name)}" onclick="openFForm(this.dataset.n)">✏️</button>
+                        <button class="btn btn-danger btn-sm" title="Xóa" data-n="${esc(f.name)}" onclick="askDeleteF(this.dataset.n)">🗑</button>
+                    </div></td></tr>`).join("") || '<tr><td colspan="3" class="muted" style="text-align:center;padding:16px;">Chưa có gia đình từ nào.</td></tr>') + "</tbody>";
+        }
+
+        const DEFAULT_TOPICS = ["Danh từ", "Động từ", "Tính từ", "Trạng từ", "Danh động từ (V-ing)", "Phát âm", "Trọng âm", "Câu điều kiện", "Câu bị động",
+            "Câu tường thuật", "So sánh", "Mệnh đề quan hệ", "Câu ước", "Thì hiện tại hoàn thành", "Liên từ chỉ sự tương phản", "Cụm động từ", "Cụm từ cố định", "Giao tiếp", "Từ vựng"];
+        function uniq(a) { const s = {}; return a.filter(x => x && !s[x] && (s[x] = 1)); }
+        function unitList() { return uniq((TQ.unitSuggest || []).concat(TQ.questions.map(q => q.unit))); }
+        function topicList() { return uniq(TQ.questions.map(q => q.topic).concat(DEFAULT_TOPICS)); }
+        function labelDatalists() {
+            return '<datalist id="dl-unit">' + unitList().map(u => `<option value="${esc(u)}">`).join("") + '</datalist>' +
+                '<datalist id="dl-topic">' + topicList().map(u => `<option value="${esc(u)}">`).join("") + '</datalist>';
+        }
+        function toggleSel(id, on) { if (on) view.sel[id] = true; else delete view.sel[id]; renderQuestionsTab(); }
+        function toggleSelAll(on) {
+            const u = el("tq-unit").value, tp = el("tq-topic").value, needle = fold(view.qSearch.trim());
+            TQ.questions.forEach(q => {
+                const ok = (view.qType === "all" || (view.qType === "bad" ? !!q.problem : qTypeOf(q) === view.qType)) &&
+                    (u === "all" || (q.unit || NO_UNIT) === u) && (tp === "all" || (q.topic || NO_TOPIC) === tp) && scopeOk(q, view.qScope) &&
+                    (!needle || fold([q.sentence, q.root, q.answer, q.alts, q.entry, q.unit, q.topic].join(" ")).includes(needle));
+                if (ok) { if (on) view.sel[q.id] = true; else delete view.sel[q.id]; }
+            });
+            renderQuestionsTab();
+        }
+        function clearSel() { view.sel = {}; renderQuestionsTab(); }
+        function openTagForm() {
+            const n = Object.keys(view.sel).length;
+            if (!n) return;
+            openModal(`<h3>Gán Unit / Chủ đề cho ${n} câu đã chọn</h3>
+                <div id="tg-error"></div>
+                <div class="form-grid">
+                    <div class="full"><label class="lbl" for="tg-unit">Unit</label><input type="text" id="tg-unit" list="dl-unit" placeholder="Chọn trong danh sách hoặc tự gõ, VD: Unit 3: Teen Stress and Pressure">
+                        <label class="muted" style="display:flex;gap:6px;align-items:center;margin-top:6px;cursor:pointer;"><input type="checkbox" id="tg-clear-unit"> Xóa Unit của các câu này (để trống)</label></div>
+                    <div class="full"><label class="lbl" for="tg-topic">Chủ đề</label><input type="text" id="tg-topic" list="dl-topic" placeholder="VD: Danh từ, Câu bị động, Phát âm...">
+                        <label class="muted" style="display:flex;gap:6px;align-items:center;margin-top:6px;cursor:pointer;"><input type="checkbox" id="tg-clear-topic"> Xóa Chủ đề của các câu này (để trống)</label></div>
+                </div>
+                ${labelDatalists()}
+                <div class="hint">Ô nào để trống (và không tích “Xóa”) thì giữ nguyên giá trị cũ của các câu. Gõ giống hệt nhau cho các câu cùng Unit / chủ đề để học sinh lọc được.</div>
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-accent" id="tg-save" onclick="applyTag()">Gán cho ${n} câu</button></div>`);
+            setTimeout(() => { const e = el("tg-unit"); if (e) e.focus(); }, 50);
+        }
+        async function applyTag() {
+            const btn = el("tg-save"); btn.disabled = true;
+            try {
+                const r = await tapi("tq_tag", {
+                    ids: Object.keys(view.sel).map(Number), unit: el("tg-unit").value, topic: el("tg-topic").value,
+                    clearUnit: el("tg-clear-unit").checked, clearTopic: el("tg-clear-topic").checked
+                });
+                if (r && r.ok) { TQ = r; view.sel = {}; closeModal(); renderQuestionsTab(); msgBox("tq-msg", "Đã gán Unit / Chủ đề cho " + r.count + " câu.", "ok"); loadData(); return; }
+                el("tg-error").innerHTML = `<div class="error-box">${esc((r && r.message) || "Chưa gán được. Thử lại.")}</div>`;
+            } catch (e) { if (e.message !== "BAD_KEY") el("tg-error").innerHTML = '<div class="error-box">Không kết nối được máy chủ.</div>'; }
+            btn.disabled = false;
+        }
+
+        // ---------------------------------------------------------------- v7: gán khối / lớp cho nhiều câu
+        function classListForScope() { return (TQ && TQ.classes) || (DATA ? DATA.classes : []) || []; }
+        function openScopeForm() {
+            const n = Object.keys(view.sel).length;
+            if (!n) return;
+            const kl = allKhoi().length ? allKhoi() : ["6", "7", "8", "9"];
+            const cls = classListForScope();
+            openModal(`<h3>Gán khối / lớp cho ${n} câu đã chọn</h3>
+                <div id="sc-error"></div>
+                <div class="full"><label class="lbl">Cách gán</label>
+                    <div class="chk-grid" style="flex-direction:column;gap:6px;">
+                        <label><input type="radio" name="sc-mode" value="set" checked> <b>Chỉ dành cho</b> các khối / lớp chọn bên dưới (thay thế giá trị cũ)</label>
+                        <label><input type="radio" name="sc-mode" value="add"> <b>Thêm</b> các khối / lớp này vào (câu dùng chung nhiều khối)</label>
+                        <label><input type="radio" name="sc-mode" value="remove"> <b>Bớt</b> các khối / lớp này ra</label>
+                        <label><input type="radio" name="sc-mode" value="clear"> <b>Cho mọi lớp</b> (bỏ giới hạn; mọi khối đều thấy)</label>
+                    </div></div>
+                <label class="lbl">Khối</label>
+                <div class="chk-grid">${kl.map(k => `<label><input type="checkbox" class="sc-k" value="${esc(k)}"> Khối ${esc(k)}</label>`).join("")}</div>
+                ${cls.length ? `<label class="lbl">Lớp riêng (không bắt buộc)</label><div class="chk-grid">${cls.map(c => `<label><input type="checkbox" class="sc-c" value="${esc(c)}"> ${esc(c)}</label>`).join("")}</div>` : ""}
+                <label class="lbl" for="sc-extra">Hoặc gõ thêm (cách nhau dấu | )</label>
+                <input type="text" id="sc-extra" placeholder="VD: 9/3|9/4">
+                <div class="hint">Học sinh chỉ thấy câu có khối / lớp của mình hoặc câu để “mọi lớp”. Câu dùng chung nhiều khối: chọn <b>Thêm</b> hoặc tích nhiều khối. Chọn “Bớt” cho mục cuối cùng sẽ đưa câu về “mọi lớp”.</div>
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-accent" id="sc-save" onclick="applyScope()">Gán cho ${n} câu</button></div>`);
+        }
+        async function applyScope() {
+            const mode = (document.querySelector('input[name="sc-mode"]:checked') || {}).value || "set";
+            const picks = [].slice.call(document.querySelectorAll(".sc-k:checked,.sc-c:checked")).map(x => x.value)
+                .concat(String(el("sc-extra").value || "").split("|").map(x => x.trim()).filter(Boolean));
+            if (mode !== "clear" && !picks.length) { el("sc-error").innerHTML = '<div class="error-box">Hãy chọn ít nhất một khối hoặc lớp.</div>'; return; }
+            const btn = el("sc-save"); btn.disabled = true;
+            try {
+                const r = await tapi("tq_tag", { ids: Object.keys(view.sel).map(Number), scope: picks.join("|"), scopeMode: mode });
+                if (r && r.ok) {
+                    TQ = r; view.sel = {}; closeModal(); renderQuestionsTab();
+                    msgBox("tq-msg", "Đã gán khối / lớp cho " + r.count + " câu." + (r.nowAll && mode === "remove" ? " (" + r.nowAll + " câu giờ dành cho mọi lớp.)" : "") + " Bấm “Chấm lại bài đã nộp” nếu cần cập nhật bảng điểm trong Sheet.", "ok");
+                    loadData(); return;
+                }
+                el("sc-error").innerHTML = `<div class="error-box">${esc((r && r.message) || "Chưa gán được. Thử lại.")}</div>`;
+            } catch (e) { if (e.message !== "BAD_KEY") el("sc-error").innerHTML = '<div class="error-box">Không kết nối được máy chủ.</div>'; }
+            btn.disabled = false;
+        }
+
+        // xuất các câu đang lọc ra CSV theo đúng thứ tự cột của “Dán nhiều câu” / mẫu nhập (có thể gửi cho đồng nghiệp rồi dán lại)
+        function exportQuestionsCsv() {
+            if (!TQ) return;
+            const list = filteredQs();
+            if (!list.length) { msgBox("tq-msg", "Không có câu nào khớp bộ lọc để xuất."); return; }
+            const cell = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+            const head = ["Câu hỏi", "Từ gốc / Gợi ý", "Đáp án", "Đáp án khác", "Giải thích", "Dịch nghĩa", "Gia đình từ", "Ẩn (x)", "Dạng bài", "Lựa chọn A", "Lựa chọn B", "Lựa chọn C", "Lựa chọn D", "Mục từ điển", "Unit", "Chủ đề", "Áp dụng cho"];
+            const rows = list.map(q => { const o = q.opts || ["", "", "", ""]; return [q.sentence, q.root, q.answer, q.alts, q.explain, q.translation, q.family, q.hidden ? "x" : "", TYPE_LABEL[qTypeOf(q)], o[0], o[1], o[2], o[3], q.entry, q.unit, q.topic, q.scope].map(cell).join(","); });
+            const tag = view.qScope === "all" ? "tat-ca" : view.qScope === "blank" ? "dung-chung" : view.qScope[0] === "k" ? "khoi-" + view.qScope.slice(1) : "lop-" + safeName(view.qScope.slice(1));
+            downloadCsv("﻿" + [head.map(cell).join(",")].concat(rows).join("\r\n"), "cau-hoi-word-form-" + tag + ".csv");
+            msgBox("tq-msg", "Đã xuất " + list.length + " câu.", "ok");
+        }
+
+        // ---------------------------------------------------------------- v7: bảng link từng lớp / khối
+        function linkBase() { return SITE_URL ? SITE_URL : API_URL.replace(/\?.*$/, ""); }
+        function linkRows() {
+            const base = linkBase();
+            const rows = [{ name: "Cả trường (học sinh tự chọn lớp)", url: base, hs: DATA.students.length, n: "—" }];
+            allKhoi().forEach(k => {
+                const sc = DATA.students.filter(s => khoiOf(s.cls) === k);
+                const ns = {}; sc.forEach(s => { ns[nOf(s)] = 1; });
+                const nk = Object.keys(ns);
+                rows.push({ name: "Khối " + k, url: base + "?khoi=" + k, hs: sc.length, n: nk.length === 1 ? nk[0] : nk.join(" / ") });
+            });
+            DATA.classes.forEach(c => {
+                const sc = DATA.students.filter(s => s.cls === c);
+                const shortName = c.replace(/^\s*(lớp|lop|class)\s+/i, "");   // "LỚP 6/1" -> "6/1" (máy chủ tự khớp lại)
+                rows.push({ name: "Lớp " + c, url: base + "?lop=" + encodeURIComponent(shortName).replace(/%2F/gi, "/"), hs: sc.length, n: sc.length ? nOf(sc[0]) : 0 });
+            });
+            return rows;
+        }
+        function renderLinks() {
+            if (!DATA) return;
+            const rows = linkRows();
+            el("links-table").innerHTML = "<thead><tr><th>Dành cho</th><th>Sĩ số</th><th>Số câu giao</th><th>Link</th><th></th></tr></thead><tbody>" +
+                rows.map((r, i) => `<tr><td><b>${esc(r.name)}</b></td><td class="num">${r.hs}</td><td class="num">${esc(String(r.n))}</td>
+                    <td class="link-url">${esc(r.url)}</td>
+                    <td><button class="btn btn-ghost btn-sm" onclick="copyLink(${i})">📋 Sao chép</button></td></tr>`).join("") + "</tbody>";
+        }
+        async function copyText(text) {
+            try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
+            try {
+                const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+                document.body.appendChild(ta); ta.focus(); ta.select();
+                const ok = document.execCommand("copy"); ta.remove(); return ok;
+            } catch (e) { return false; }
+        }
+        async function copyLink(i) {
+            const r = linkRows()[i]; if (!r) return;
+            msgBox("links-msg", (await copyText(r.url)) ? "Đã sao chép link: " + r.name : "Trình duyệt chưa cho sao chép. Hãy bôi đen link và sao chép thủ công.", "ok");
+        }
+        async function copyAllLinks() {
+            const text = linkRows().map(r => r.name + ": " + r.url).join("\n");
+            msgBox("links-msg", (await copyText(text)) ? "Đã sao chép tất cả link (có tên lớp) — dán vào Zalo / ghi chú." : "Trình duyệt chưa cho sao chép. Hãy bôi đen bảng link và sao chép thủ công.", "ok");
+        }
+
+
+        // ---------------------------------------------------------------- CHỐNG GIAN LẬN
+        let AC = null;
+        const AC_MODE_LABEL = { free: "Tự do (không theo dõi)", exam: "Nhắc nhở khi Làm đề tổng hợp", all: "Nhắc nhở cả khi luyện tập" };
+        async function loadAc() {
+            try {
+                const r = await tapi("ac_list");
+                if (!r || !r.ok) { msgBox("ac-msg", "Chưa tải được dữ liệu chống gian lận."); return; }
+                AC = r; renderAc();
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("ac-msg", "Không kết nối được máy chủ."); }
+        }
+        function renderAc() {
+            if (!AC) return;
+            const c = AC.cfg;
+            el("ac-mode").innerHTML = ["free", "exam", "all"].map(m => `<option value="${m}" ${c.mode === m ? "selected" : ""}>${AC_MODE_LABEL[m]}</option>`).join("");
+            el("ac-limit").value = c.limit;
+            const sel = (i, v) => `<select id="ac-cm-${i}" style="background:rgba(15,23,42,0.9);color:inherit;border:1px solid var(--border);border-radius:8px;padding:6px 8px;"><option value="">Theo mặc định</option>` +
+                ["free", "exam", "all"].map(m => `<option value="${m}" ${v === m ? "selected" : ""}>${AC_MODE_LABEL[m]}</option>`).join("") + "</select>";
+            el("ac-class-table").innerHTML = "<thead><tr><th>Lớp</th><th>Cách làm bài</th><th>Số lần được phép</th><th>Đang áp dụng</th></tr></thead><tbody>" +
+                (c.classes.length ? c.classes.map((x, i) => `<tr><td><b>${esc(x.name)}</b></td><td>${sel(i, x.mode)}</td>
+                    <td><input type="text" id="ac-cl-${i}" inputmode="numeric" value="${x.limit || ""}" placeholder="mặc định" style="width:90px;background:rgba(15,23,42,0.9);color:inherit;border:1px solid var(--border);border-radius:8px;padding:6px 8px;"></td>
+                    <td><span class="tag ${x.effMode === "free" ? "off" : "ok"}">${esc(AC_MODE_LABEL[x.effMode])}${x.effMode === "free" ? "" : " · " + x.effLimit + " lần"}</span></td></tr>`).join("")
+                    : '<tr><td colspan="4" class="muted">Chưa có lớp nào trong danh sách.</td></tr>') + "</tbody>";
+            const cur = el("ac-f-class").value;
+            el("ac-f-class").innerHTML = '<option value="">Tất cả các lớp</option>' + c.classes.map(x => `<option value="${esc(x.name)}" ${cur === x.name ? "selected" : ""}>${esc(x.name)}</option>`).join("");
+            renderAcLog();
+        }
+        async function saveAc() {
+            if (!AC) return;
+            const lim = parseInt(el("ac-limit").value, 10);
+            if (!(lim >= 1 && lim <= 20)) { msgBox("ac-msg", "Số lần được phép phải từ 1 đến 20."); return; }
+            const classes = AC.cfg.classes.map((x, i) => {
+                const l = parseInt(el("ac-cl-" + i).value, 10);
+                return { name: x.name, mode: el("ac-cm-" + i).value, limit: l >= 1 ? Math.min(20, l) : 0 };
+            });
+            try {
+                const r = await tapi("ac_save", { cfg: { mode: el("ac-mode").value, limit: lim, classes: classes } });
+                if (!r || !r.ok) { msgBox("ac-msg", "Chưa lưu được cài đặt. Thử lại."); return; }
+                AC.cfg = r.cfg; renderAc();
+                msgBox("ac-msg", "Đã lưu. Học sinh áp dụng cài đặt mới khi đăng nhập hoặc tải lại trang.", "ok");
+                loadData();
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("ac-msg", "Không kết nối được máy chủ."); }
+        }
+        function acFiltered() {
+            if (!AC) return [];
+            const c = el("ac-f-class").value, from = el("ac-f-from").value, to = el("ac-f-to").value;
+            return AC.events.filter(e => (!c || e.cls === c) && (!from || e.t.slice(0, 10) >= from) && (!to || e.t.slice(0, 10) <= to));
+        }
+        function renderAcLog() {
+            if (!AC) return;
+            const ev = acFiltered();
+            const sum = {};
+            ev.forEach(e => {
+                const k = e.cls + "|" + e.name;
+                const o = sum[k] || (sum[k] = { cls: e.cls, name: e.name, n: 0, secs: 0, auto: 0, last: "" });
+                o.n++; o.secs += e.secs; if (e.auto) o.auto++; if (e.t > o.last) o.last = e.t;
+            });
+            const rows = Object.keys(sum).map(k => sum[k]).sort((a, b) => b.n - a.n || natCmp(a.name, b.name));
+            el("ac-sum-table").innerHTML = "<thead><tr><th>Lớp</th><th>Họ và tên</th><th>Số lần rời trang</th><th>Tổng thời gian rời</th><th>Bài tự nộp</th><th>Lần gần nhất</th></tr></thead><tbody>" +
+                (rows.length ? rows.map(o => `<tr><td>${esc(o.cls)}</td><td><b>${esc(o.name)}</b></td><td class="num">${o.n}</td><td>${esc(fmtSecs(o.secs))}</td>
+                    <td>${o.auto ? '<span class="tag bad">' + o.auto + "</span>" : '<span class="muted">0</span>'}</td><td>${esc(ago(o.last))}</td></tr>`).join("")
+                    : '<tr><td colspan="6" class="muted" style="text-align:center;padding:16px;">Chưa có lần rời trang nào được ghi nhận.</td></tr>') + "</tbody>";
+            el("ac-log-table").innerHTML = "<thead><tr><th>Thời gian</th><th>Lớp</th><th>Họ và tên</th><th>Đang ở</th><th>Lần thứ</th><th>Rời</th><th>Ghi chú</th></tr></thead><tbody>" +
+                ev.slice(0, 200).map(e => `<tr><td>${esc(e.t.slice(0, 16).replace("T", " "))}</td><td>${esc(e.cls)}</td><td>${esc(e.name)}</td><td>${esc(e.where)}</td><td class="num">${e.n}</td>
+                    <td>${esc(fmtSecs(e.secs))}</td><td>${e.auto ? '<span class="tag bad">tự nộp bài</span> ' : ""}${esc(e.note || "")}</td></tr>`).join("") + "</tbody>";
+        }
+        function exportAcCsv() {
+            if (!AC) return;
+            const cell = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+            const head = ["Thời gian", "Lớp", "Họ và tên", "Đang ở chế độ", "Lần rời thứ", "Thời gian rời (giây)", "Bài bị tự nộp", "Ghi chú"];
+            const rows = acFiltered().map(e => [e.t.slice(0, 19).replace("T", " "), e.cls, e.name, e.where, e.n, e.secs, e.auto ? "Có" : "", e.note].map(cell).join(","));
+            downloadCsv("﻿" + [head.map(cell).join(",")].concat(rows).join("\r\n"), "nhat-ky-roi-trang.csv");
+        }
+
+        function openQForm(id) {
+            const q = TQ && TQ.questions.find(x => x.id === id) || { id: 0, type: "dien_tu", sentence: "", root: "", answer: "", alts: "", explain: "", translation: "", family: "", hidden: false, opts: ["", "", "", ""], entry: "", unit: view.qUnit !== "all" && view.qUnit !== NO_UNIT ? view.qUnit : (view.lastUnit || ""), topic: view.qTopic !== "all" && view.qTopic !== NO_TOPIC ? view.qTopic : (view.lastTopic || ""), scope: view.qScope && view.qScope[0] === "k" ? view.qScope.slice(1) : view.qScope && view.qScope[0] === "c" ? view.qScope.slice(1) : (view.lastScope || "") };
+            const t = qTypeOf(q);
+            const famOpts = ['<option value="">(không thuộc nhóm nào)</option>'].concat(
+                TQ.families.map(f => `<option value="${esc(f.name)}" ${f.name.toLowerCase() === (q.family || "").toLowerCase() ? "selected" : ""}>${esc(f.name)}</option>`)).join("");
+            const entOpts = ['<option value="">(chọn mục từ điển)</option>'].concat(
+                (TQ.entries || []).map(e => `<option value="${esc(e.name)}" ${e.name.toLowerCase() === (q.entry || "").toLowerCase() ? "selected" : ""}>${esc(e.name)}</option>`)).join("");
+            const typeOpts = TYPE_ORDER.map(k => `<option value="${k}" ${k === t ? "selected" : ""}>${TYPE_LABEL[k]}</option>`).join("");
+            const opts = q.opts || ["", "", "", ""];
+            const letter = (q.answer || "").trim().toUpperCase();
+            openModal(`<h3>${id ? "Sửa câu " + id : "Thêm câu hỏi"}</h3>
+                <div id="qf-error"></div>
+                <div class="form-grid">
+                    <div class="full"><label class="lbl" for="qf-type">Dạng bài</label>
+                        <select id="qf-type" onchange="onQTypeChange()">${typeOpts}</select>
+                        <div class="hint" id="qf-type-hint"></div></div>
+                    <div class="full"><label class="lbl" for="qf-sentence" id="qf-sentence-lbl">Câu hỏi</label>
+                        <textarea id="qf-sentence" rows="3">${esc(q.sentence)}</textarea>
+                        <div class="hint" id="qf-sentence-hint"></div></div>
+                    <div id="qf-root-wrap"><label class="lbl" for="qf-root" id="qf-root-lbl">Từ gốc (hiện trong ngoặc)</label><input type="text" id="qf-root" value="${esc(q.root)}" placeholder="ATTRACT"></div>
+                    <div id="qf-entry-wrap"><label class="lbl" for="qf-entry">Mục từ điển</label><select id="qf-entry">${entOpts}</select></div>
+                    <div id="qf-answer-wrap"><label class="lbl" for="qf-answer" id="qf-answer-lbl">Đáp án</label><input type="text" id="qf-answer" value="${esc(t === "trac_nghiem" ? letter : q.answer)}" placeholder="attractions"></div>
+                    <div class="full" id="qf-opts-wrap"><label class="lbl">Các lựa chọn (gõ nội dung; đáp án đúng chọn ở ô bên trên)</label>
+                        <div class="opt-grid">${"ABCD".split("").map((L, i) => `<div class="optrow"><b>${L}</b><input type="text" id="qf-opt-${i}" value="${esc(opts[i] || "")}" placeholder="Lựa chọn ${L}"></div>`).join("")}</div></div>
+                    <div class="full" id="qf-alts-wrap"><label class="lbl" for="qf-alts">Đáp án khác cũng được tính đúng (không bắt buộc)</label><input type="text" id="qf-alts" value="${esc(q.alts)}" placeholder="Ví dụ: prioritise  (nhiều đáp án: cách nhau dấu |)"></div>
+                    <div class="full"><label class="lbl" for="qf-explain">Giải thích</label><textarea id="qf-explain" rows="3">${esc(q.explain)}</textarea></div>
+                    <div class="full"><label class="lbl" for="qf-trans">Dịch nghĩa</label><textarea id="qf-trans" rows="2">${esc(q.translation)}</textarea></div>
+                    <div id="qf-family-wrap"><label class="lbl" for="qf-family">Gia đình từ</label><select id="qf-family">${famOpts}</select></div>
+                    <div style="display:flex;align-items:flex-end;"><label class="muted" style="display:flex;gap:8px;align-items:center;cursor:pointer;"><input type="checkbox" id="qf-hidden" ${q.hidden ? "checked" : ""}> Ẩn câu này khỏi học sinh</label></div>
+                    <div><label class="lbl" for="qf-unit">Unit (để học sinh lọc bài)</label><input type="text" id="qf-unit" list="dl-unit" value="${esc(q.unit || "")}" placeholder="VD: Unit 3: Teen Stress and Pressure"></div>
+                    <div><label class="lbl" for="qf-topic">Chủ đề / chuyên đề</label><input type="text" id="qf-topic" list="dl-topic" value="${esc(q.topic || "")}" placeholder="VD: Danh từ, Câu bị động..."></div>
+                    <div class="full"><label class="lbl" for="qf-scope">Áp dụng cho khối / lớp (để trống = mọi lớp đều thấy)</label><input type="text" id="qf-scope" list="dl-scope" value="${esc(q.scope || "")}" placeholder="VD: 9  hoặc  6|7  hoặc  9/1|9/2">
+                        <div class="hint">Gõ số khối (6, 7, 8, 9) hoặc tên lớp như ở thẻ Lớp học. Nhiều khối / lớp cách nhau dấu | để dùng chung câu này.</div></div>
+                </div>
+                <datalist id="dl-scope">${allKhoi().concat(classListForScope()).map(x => `<option value="${esc(x)}">`).join("")}</datalist>
+                ${labelDatalists()}
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-accent" id="qf-save" onclick="saveQ(${id})">Lưu</button></div>`);
+            onQTypeChange();
+            setTimeout(() => { const e = el("qf-sentence"); if (e) e.focus(); }, 50);
+        }
+
+        const TYPE_HELP = {
+            dien_tu: ["Câu có 1 chỗ trống", "Gõ <b>____</b> (4 dấu gạch dưới) vào đúng chỗ học sinh phải điền. Chỉ 1 chỗ trống mỗi câu.", "Từ gốc (hiện trong ngoặc)", "ATTRACT", "Đáp án", "attractions"],
+            trac_nghiem: ["Câu hỏi trắc nghiệm", "Có thể có chỗ trống <b>____</b>. Với câu phát âm, bao phần gạch chân giữa hai dấu <b>**</b> trong lựa chọn, ví dụ ô A gõ <b>b**ea**ch</b> (hiện in đậm, gạch chân).", "", "", "Đáp án đúng (A, B, C hoặc D)", "B"],
+            viet_lai: ["Câu gốc cần viết lại", "Gõ câu gốc (không cần chỗ trống). Học sinh viết lại cả câu; so khớp không phân biệt hoa/thường và dấu câu.", "Gợi ý bắt đầu (không bắt buộc)", "Begin with: She said that ...", "Đáp án (cả câu đúng)", "She said that she was tired."],
+            word_entry: ["Câu có 1 chỗ trống", "Gõ <b>____</b> vào chỗ học sinh phải điền cụm 2–3 từ lấy từ mục từ điển. Đáp án phải là một cụm in đậm trong mục từ điển.", "", "", "Đáp án (cụm 2–3 từ)", "put pressure on"]
+        };
+
+        function onQTypeChange() {
+            const t = el("qf-type").value, h = TYPE_HELP[t];
+            el("qf-sentence-lbl").textContent = h[0];
+            el("qf-sentence-hint").innerHTML = h[1];
+            el("qf-type-hint").textContent = ({ dien_tu: "Word Form: cho từ gốc, học sinh điền dạng đúng.", trac_nghiem: "Chọn 1 trong 4 đáp án A–D (phát âm, trọng âm, ngữ pháp, từ vựng, giao tiếp...).", viet_lai: "Viết lại câu sao cho nghĩa không đổi (bị động, tường thuật, điều kiện, so sánh...).", word_entry: "Đọc mục từ điển rồi điền cụm 2–3 từ vào câu." })[t];
+            el("qf-root-wrap").classList.toggle("hidden", !(t === "dien_tu" || t === "viet_lai"));
+            el("qf-root-lbl").textContent = h[2] || "Từ gốc";
+            el("qf-root").placeholder = h[3];
+            el("qf-entry-wrap").classList.toggle("hidden", t !== "word_entry");
+            el("qf-opts-wrap").classList.toggle("hidden", t !== "trac_nghiem");
+            el("qf-alts-wrap").classList.toggle("hidden", t === "trac_nghiem");
+            el("qf-family-wrap").classList.toggle("hidden", t !== "dien_tu");
+            el("qf-answer-lbl").textContent = h[4];
+            el("qf-answer").placeholder = h[5];
+            el("qf-answer").maxLength = t === "trac_nghiem" ? 1 : 250;
+        }
+
+        function collectQ(id, hiddenOverride) {
+            const t = el("qf-type").value;
+            return {
+                id: id, type: TYPE_LABEL[t], sentence: el("qf-sentence").value, root: el("qf-root").value, answer: el("qf-answer").value,
+                alts: el("qf-alts").value, explain: el("qf-explain").value, translation: el("qf-trans").value,
+                family: el("qf-family").value, hidden: el("qf-hidden").checked,
+                opts: [0, 1, 2, 3].map(i => el("qf-opt-" + i).value), entry: el("qf-entry").value,
+                unit: el("qf-unit").value, topic: el("qf-topic").value, scope: el("qf-scope").value
+            };
+        }
+
+        async function saveQ(id) {
+            const btn = el("qf-save"); btn.disabled = true; btn.textContent = "Đang lưu...";
+            try {
+                const r = await tapi("tq_save", { q: collectQ(id) });
+                if (r && r.ok) { if (!id) { view.lastUnit = el("qf-unit").value.trim(); view.lastTopic = el("qf-topic").value.trim(); view.lastScope = el("qf-scope").value.trim(); } TQ = r; closeModal(); renderQuestionsTab(); msgBox("tq-msg", "Đã lưu câu " + r.id + ".", "ok"); return; }
+                el("qf-error").innerHTML = `<div class="error-box">${esc((r && r.message) || "Chưa lưu được. Thử lại.")}</div>`;
+            } catch (e) { if (e.message !== "BAD_KEY") el("qf-error").innerHTML = '<div class="error-box">Không kết nối được máy chủ.</div>'; }
+            btn.disabled = false; btn.textContent = "Lưu";
+        }
+
+        async function toggleHide(id) {
+            const q = TQ.questions.find(x => x.id === id); if (!q) return;
+            try {
+                const r = await tapi("tq_save", { q: Object.assign({}, q, { type: TYPE_LABEL[qTypeOf(q)], hidden: !q.hidden }) });
+                if (r && r.ok) { TQ = r; renderQuestionsTab(); msgBox("tq-msg", ""); }
+                else msgBox("tq-msg", (r && r.message) || "Chưa đổi được.");
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("tq-msg", "Không kết nối được máy chủ."); }
+        }
+
+        function askDeleteQ(id) {
+            confirmBox("Xóa câu " + id + "? Câu này sẽ biến mất khỏi bài của học sinh và không còn tính vào điểm.", "Xóa câu", async () => {
+                try {
+                    const r = await tapi("tq_delete", { id: id });
+                    if (r && r.ok) { TQ = r; renderQuestionsTab(); msgBox("tq-msg", "Đã xóa câu " + id + ".", "ok"); loadData(); }
+                    else msgBox("tq-msg", (r && r.message) || "Chưa xóa được.");
+                } catch (e) { if (e.message !== "BAD_KEY") msgBox("tq-msg", "Không kết nối được máy chủ."); }
+            });
+        }
+
+        function openBulkQ() {
+            openModal(`<h3>Dán nhiều câu hỏi</h3>
+                <div id="bq-result"></div>
+                <p class="muted" style="margin-bottom:8px;">Mỗi dòng một câu, các cột cách nhau bằng phím <b>Tab</b> (copy từ Excel / Google Sheets rồi dán vào đây). Thứ tự cột (giống sheet <b>CauHoi</b>, bỏ cột STT):</p>
+                <p style="margin-bottom:8px; font-size:0.85rem; line-height:1.7;"><b>1 Câu hỏi</b> | <b>2 Từ gốc / Gợi ý</b> | <b>3 Đáp án</b> | 4 Đáp án khác | 5 Giải thích | 6 Dịch nghĩa | 7 Gia đình từ | 8 Ẩn (x) | <b>9 Dạng bài</b> | 10-13 Lựa chọn A, B, C, D | 14 Mục từ điển | <b>15 Unit</b> | <b>16 Chủ đề</b> | <b>17 Áp dụng cho (khối/lớp)</b></p>
+                <div class="full" style="margin-bottom:8px;"><label class="lbl" for="bq-scope">Áp dụng cho khối / lớp (nếu dòng không có cột 17)</label><input type="text" id="bq-scope" list="dl-scope" value="${esc(view.qScope && (view.qScope[0] === "k" || view.qScope[0] === "c") ? view.qScope.slice(1) : (view.lastScope || ""))}" placeholder="VD: 7  hoặc  6|7  (để trống = mọi lớp)"><datalist id="dl-scope">${allKhoi().concat(classListForScope()).map(x => `<option value="${esc(x)}">`).join("")}</datalist></div>
+                <textarea id="bq-text" rows="11" style="font-family:monospace; font-size:0.85rem;" placeholder="Điền từ:&#10;She is very ____ about the exam.&#9;ANXIETY&#9;anxious&#10;&#10;Trắc nghiệm (cột 9 = Trắc nghiệm, cột 10-13 = A, B, C, D):&#10;If I ____ time, I would help.&#9;&#9;B&#9;&#9;&#9;&#9;&#9;&#9;Trắc nghiệm&#9;have&#9;had&#9;will have&#9;would have"></textarea>
+                <div class="hint">Chỉ 3 cột đầu là bắt buộc với Điền từ. Dạng bài ghi đúng chữ: Điền từ / Trắc nghiệm / Viết lại câu / Word entry (để trống = Điền từ). Trắc nghiệm: Đáp án là chữ A–D. Word entry: cột 14 phải trùng tên một mục từ đã có. Cột 15-17 (Unit, Chủ đề, Áp dụng cho) không bắt buộc: các câu cùng Unit / chủ đề nên gõ giống hệt nhau; Áp dụng cho gõ khối (6, 7, 8, 9) hoặc lớp, nhiều mục cách nhau dấu |. Câu trùng nội dung với câu đã có sẽ được bỏ qua. Tối đa 800 câu.</div>
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Đóng</button>
+                <button class="btn btn-accent" id="bq-btn" onclick="importQ()">Thêm các câu này</button></div>`);
+        }
+
+        async function importQ() {
+            const text = el("bq-text").value;
+            const btn = el("bq-btn"); btn.disabled = true; btn.textContent = "Đang thêm...";
+            try {
+                const r = await tapi("tq_import", { text: text, scope: (el("bq-scope") || {}).value || "" });
+                if (r && r.ok) {
+                    TQ = r; renderQuestionsTab();
+                    let m = "Đã thêm " + r.added + " câu.";
+                    if (r.skipped && r.skipped.length) m += "\nBỏ qua " + r.skipped.length + " dòng:\n" + r.skipped.slice(0, 15).map(x => "• Dòng " + x.line + ": " + x.reason).join("\n") + (r.skipped.length > 15 ? "\n…" : "");
+                    el("bq-result").innerHTML = `<div class="${r.skipped && r.skipped.length ? "warn-box" : "ok-box"}">${esc(m)}</div>`;
+                    if (r.added) el("bq-text").value = "";
+                } else el("bq-result").innerHTML = `<div class="error-box">${esc((r && r.message) || "Chưa thêm được.")}</div>`;
+            } catch (e) { if (e.message !== "BAD_KEY") el("bq-result").innerHTML = '<div class="error-box">Không kết nối được máy chủ.</div>'; }
+            btn.disabled = false; btn.textContent = "Thêm các câu này";
+        }
+
+        async function seedQuestions() {
+            try {
+                const r = await tapi("tq_seed");
+                if (r && r.ok) { TQ = r; renderQuestionsTab(); msgBox("tq-msg", "Đã nạp bộ câu hỏi mẫu của Word Form 9.", "ok"); loadData(); }
+                else msgBox("tq-msg", (r && r.message) || "Chưa nạp được.");
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("tq-msg", "Không kết nối được máy chủ."); }
+        }
+
+        async function regradeAll() {
+            const btn = el("regrade-btn"); btn.disabled = true;
+            msgBox("tq-msg", "Đang chấm lại...", "warn");
+            try {
+                const r = await tapi("regrade");
+                if (r && r.ok) { msgBox("tq-msg", "Đã chấm lại bài của " + r.students + " học sinh theo đáp án hiện tại.", "ok"); loadData(); }
+                else msgBox("tq-msg", "Chưa chấm lại được.");
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("tq-msg", "Không kết nối được máy chủ."); }
+            btn.disabled = false;
+        }
+
+                // ---- mục từ điển
+        function openEForm(name) {
+            const e = (TQ.entries || []).find(x => x.name === name) || { name: "", ipa: "", pos: "", defs: [], examples: [] };
+            openModal(`<h3>${name ? "Sửa mục từ" : "Thêm mục từ điển"}</h3>
+                <div id="ef-error"></div>
+                <div class="form-grid">
+                    <div><label class="lbl" for="ef-name">Từ cần tra</label><input type="text" id="ef-name" value="${esc(e.name)}" placeholder="pressure"></div>
+                    <div><label class="lbl" for="ef-pos">Từ loại</label><input type="text" id="ef-pos" value="${esc(e.pos)}" placeholder="noun"></div>
+                    <div class="full"><label class="lbl" for="ef-ipa">Phiên âm</label><input type="text" id="ef-ipa" value="${esc(e.ipa)}" placeholder="/ˈpreʃ.ər/"></div>
+                    <div class="full"><label class="lbl" for="ef-defs">Nghĩa tiếng Anh (mỗi nghĩa một dòng)</label><textarea id="ef-defs" rows="3">${esc((e.defs || []).join("\n"))}</textarea></div>
+                    <div class="full"><label class="lbl" for="ef-ex">Câu ví dụ (mỗi câu một dòng, ít nhất 2 câu)</label><textarea id="ef-ex" rows="6">${esc((e.examples || []).join("\n"))}</textarea>
+                        <div class="hint">Cụm 2–3 từ học sinh cần học viết giữa hai dấu <b>**</b>, ví dụ: Many students feel <b>**under pressure**</b> before exams.</div></div>
+                </div>
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-accent" id="ef-save" data-old="${esc(e.name)}" onclick="saveE(this.dataset.old)">Lưu</button></div>`);
+        }
+
+        async function saveE(oldName) {
+            const btn = el("ef-save"); btn.disabled = true;
+            try {
+                const r = await tapi("te_save", { oldName: oldName, name: el("ef-name").value, ipa: el("ef-ipa").value, pos: el("ef-pos").value, defs: el("ef-defs").value, examples: el("ef-ex").value });
+                if (r && r.ok) { TQ = r; closeModal(); renderQuestionsTab(); msgBox("te-msg", "Đã lưu mục từ.", "ok"); return; }
+                el("ef-error").innerHTML = `<div class="error-box">${esc((r && r.message) || "Chưa lưu được.")}</div>`;
+            } catch (e) { if (e.message !== "BAD_KEY") el("ef-error").innerHTML = '<div class="error-box">Không kết nối được máy chủ.</div>'; }
+            btn.disabled = false;
+        }
+
+        function askDeleteE(name) {
+            confirmBox("Xóa mục từ “" + name + "”? Chỉ xóa được khi không còn câu Word entry nào dùng mục từ này.", "Xóa mục từ", async () => {
+                try {
+                    const r = await tapi("te_delete", { name: name });
+                    if (r && r.ok) { TQ = r; renderQuestionsTab(); msgBox("te-msg", "Đã xóa mục từ.", "ok"); }
+                    else msgBox("te-msg", (r && r.message) || "Chưa xóa được.");
+                } catch (e) { if (e.message !== "BAD_KEY") msgBox("te-msg", "Không kết nối được máy chủ."); }
+            });
+        }
+
+        // ---- gia đình từ
+        function openFForm(name) {
+            const f = TQ.families.find(x => x.name === name) || { name: "", content: "" };
+            openModal(`<h3>${name ? "Sửa gia đình từ" : "Thêm gia đình từ"}</h3>
+                <div id="ff-error"></div>
+                <div class="form-grid">
+                    <div class="full"><label class="lbl" for="ff-name">Từ gốc (tên nhóm)</label><input type="text" id="ff-name" value="${esc(f.name)}" placeholder="ATTRACT"></div>
+                    <div class="full"><label class="lbl" for="ff-content">Nội dung</label>
+                        <textarea id="ff-content" rows="5">${esc(f.content)}</textarea>
+                        <div class="hint">Nối các dạng từ bằng dấu → , ví dụ: Attract (v): thu hút → attraction (n): sự thu hút → attractive (adj): hấp dẫn</div></div>
+                </div>
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-accent" id="ff-save" data-old="${esc(f.name)}" onclick="saveF(this.dataset.old)">Lưu</button></div>`);
+        }
+
+        async function saveF(oldName) {
+            const btn = el("ff-save"); btn.disabled = true;
+            try {
+                const r = await tapi("tf_save", { oldName: oldName, name: el("ff-name").value, content: el("ff-content").value });
+                if (r && r.ok) { TQ = r; closeModal(); renderQuestionsTab(); msgBox("tq-msg", "Đã lưu gia đình từ.", "ok"); return; }
+                el("ff-error").innerHTML = `<div class="error-box">${esc((r && r.message) || "Chưa lưu được.")}</div>`;
+            } catch (e) { if (e.message !== "BAD_KEY") el("ff-error").innerHTML = '<div class="error-box">Không kết nối được máy chủ.</div>'; }
+            btn.disabled = false;
+        }
+
+        function askDeleteF(name) {
+            confirmBox("Xóa gia đình từ “" + name + "”? Các câu đang dùng nhóm này sẽ không còn gắn nhóm.", "Xóa nhóm", async () => {
+                try {
+                    const r = await tapi("tf_delete", { name: name });
+                    if (r && r.ok) { TQ = r; renderQuestionsTab(); msgBox("tq-msg", "Đã xóa nhóm.", "ok"); }
+                    else msgBox("tq-msg", (r && r.message) || "Chưa xóa được.");
+                } catch (e) { if (e.message !== "BAD_KEY") msgBox("tq-msg", "Không kết nối được máy chủ."); }
+            });
+        }
+
+        // ---------------------------------------------------------------- LỚP HỌC
+        async function loadRoster() {
+            try {
+                const r = await tapi("tr_list");
+                if (!r || !r.ok) { msgBox("tr-msg", "Chưa tải được danh sách lớp."); return; }
+                TR = r; renderRoster();
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("tr-msg", "Không kết nối được máy chủ."); }
+        }
+
+        function renderRoster() {
+            if (!TR) return;
+            el("tr-count").textContent = "(" + TR.students.length + " học sinh, " + TR.classes.length + " lớp)";
+            el("tr-cls-list").innerHTML = TR.classes.map(c => `<option value="${esc(c)}">`).join("");
+            el("tr-list").innerHTML = TR.classes.length ? TR.classes.map(c => {
+                const list = TR.students.filter(s => s.cls === c);
+                return `<details class="cls-block" ${TR.classes.length <= 3 ? "open" : ""}><summary>Lớp ${esc(c)} — ${list.length} học sinh</summary>` +
+                    list.map((s, i) => `<div class="stu-row">
+                        <span class="muted">${i + 1}</span><span><b>${esc(s.name)}</b></span>
+                        <span>${s.code ? '<span class="tag doing">có mã</span>' : '<span class="muted">không mã</span>'}</span>
+                        <span class="del">
+                            <button class="btn btn-ghost btn-sm" data-c="${esc(s.cls)}" data-n="${esc(s.name)}" data-k="${esc(s.code)}" onclick="openCode(this.dataset.c, this.dataset.n, this.dataset.k)">🔑 Mã</button>
+                            <button class="btn btn-danger btn-sm" data-c="${esc(s.cls)}" data-n="${esc(s.name)}" onclick="askDeleteS(this.dataset.c, this.dataset.n)">🗑 Xóa</button>
+                        </span></div>`).join("") + "</details>";
+            }).join("") : '<p class="muted">Chưa có học sinh nào. Hãy dán danh sách ở khung phía trên.</p>';
+        }
+
+        async function addRoster() {
+            const btn = el("tr-btn"); btn.disabled = true; btn.textContent = "Đang thêm...";
+            try {
+                const r = await tapi("tr_import", { cls: el("tr-cls").value, text: el("tr-text").value });
+                if (r && r.ok) {
+                    TR = r; renderRoster();
+                    let m = "Đã thêm " + r.added + " học sinh.";
+                    if (r.skipped && r.skipped.length) m += "\nĐã có sẵn, bỏ qua: " + r.skipped.length;
+                    if (r.bad && r.bad.length) m += "\nKhông đọc được " + r.bad.length + " dòng:\n" + r.bad.slice(0, 8).join("\n");
+                    msgBox("tr-msg", m, r.bad && r.bad.length ? "warn" : "ok");
+                    if (r.added) { el("tr-text").value = ""; loadData(); }
+                } else msgBox("tr-msg", (r && r.message) || "Chưa thêm được.");
+            } catch (e) { if (e.message !== "BAD_KEY") msgBox("tr-msg", "Không kết nối được máy chủ."); }
+            btn.disabled = false; btn.textContent = "Thêm vào danh sách";
+        }
+
+        function openCode(cls, name, code) {
+            openModal(`<h3>Mã học sinh — ${esc(name)} (${esc(cls)})</h3>
+                <div id="cd-error"></div>
+                <label class="lbl" for="cd-input">Mã (để trống = không cần mã)</label>
+                <input type="text" id="cd-input" value="${esc(code)}" placeholder="Ví dụ: 4821" style="width:100%;">
+                <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-accent" data-c="${esc(cls)}" data-n="${esc(name)}" onclick="saveCode(this.dataset.c, this.dataset.n)">Lưu</button></div>`);
+        }
+
+        async function saveCode(cls, name) {
+            try {
+                const r = await tapi("tr_code", { cls: cls, name: name, code: el("cd-input").value });
+                if (r && r.ok) { TR = r; closeModal(); renderRoster(); msgBox("tr-msg", "Đã lưu mã cho " + name + ".", "ok"); }
+                else el("cd-error").innerHTML = `<div class="error-box">${esc((r && r.message) || "Chưa lưu được.")}</div>`;
+            } catch (e) { if (e.message !== "BAD_KEY") el("cd-error").innerHTML = '<div class="error-box">Không kết nối được máy chủ.</div>'; }
+        }
+
+        function askDeleteS(cls, name) {
+            confirmBox("Xóa " + name + " (lớp " + cls + ") khỏi danh sách? Em này sẽ không vào làm bài được nữa. Kết quả cũ vẫn còn trong Google Sheet.", "Xóa học sinh", async () => {
+                try {
+                    const r = await tapi("tr_delete", { cls: cls, name: name });
+                    if (r && r.ok) { TR = r; renderRoster(); msgBox("tr-msg", "Đã xóa " + name + ".", "ok"); loadData(); }
+                    else msgBox("tr-msg", (r && r.message) || "Chưa xóa được.");
+                } catch (e) { if (e.message !== "BAD_KEY") msgBox("tr-msg", "Không kết nối được máy chủ."); }
+            });
+        }
+
+        // ---------------------------------------------------------------- BÀI LÀM TỪNG HỌC SINH + CSV TỪNG CÂU
+        async function fetchDetail() {
+            if (DETAIL) return DETAIL;
+            const r = await apiPost({ action: "dashboard", key: teacherKey, detail: true });
+            if (!r || !r.ok) throw new Error("detail");
+            DETAIL = r;
+            return r;
+        }
+
+        const RESULT_LABEL = { "Đ": "Đúng", "S": "Sai", "X": "Xem đáp án", "T+": "Đúng", "T-": "Sai" };
+
+        async function openStudent(cls, name) {
+            openModal('<h3>Đang tải bài làm...</h3>');
+            try {
+                const d = await fetchDetail();
+                const s = d.students.find(x => x.cls === cls && x.name === name);
+                if (!s) { closeModal(); return; }
+                const rows = d.questions.map((q, i) => {
+                    if (!isAsg(s, i)) return "";
+                    const t = qTypeOf(q);
+                    const st = s.states[i] || "", txt = s.texts[i] || "";
+                    const good = isGood(st);
+                    let cell;
+                    if (t === "trac_nghiem") {
+                        cell = richHtml(q.sentence) + (st ? ` <span class="${good ? "rv-ok" : "rv-bad"}">→ ${st === "X" ? "(xem đáp án)" : "chọn " + esc(txt || "(bỏ trống)")}</span>` : "");
+                    } else if (t === "viet_lai") {
+                        cell = richHtml(q.sentence) + (q.root ? ` <span class="muted">(${esc(q.root)})</span>` : "") +
+                            (st ? `<div class="${good ? "rv-ok" : "rv-bad"}">✎ ${esc(st === "X" ? "(xem đáp án)" : txt || "(bỏ trống)")}</div>` : "");
+                    } else {
+                        const filled = st ? `<span class="${good ? "rv-ok" : "rv-bad"}">${esc(st === "X" ? q.answer : txt || "(bỏ trống)")}</span>` : "______";
+                        cell = richHtml(q.sentence).replace(/_{3,}/, filled) + ` <span class="muted">(${esc(t === "word_entry" ? "📖 " + (q.entry || "") : q.root)})</span>`;
+                    }
+                    return `<tr><td><b>${q.id}</b></td><td>${typeTag(q)}</td><td class="wrap">${cell}</td>
+                        <td>${richHtml(ansFull(q))}</td>
+                        <td>${st ? `<span class="${good ? "rv-ok" : "rv-bad"}">${good ? "✔" : "✘"} ${RESULT_LABEL[st] || ""}</span>` : '<span class="muted">chưa làm</span>'}</td></tr>`;
+                }).join("");
+                openModal(`<h3>${esc(s.name)} — lớp ${esc(s.cls)}</h3>
+                    <p class="muted" style="margin-bottom:10px;">Đã làm ${s.done}/${nOf(s)} câu · đúng ${s.correct} · sai ${s.wrong} · điểm ${s.done ? score1(s.score) : "—"}/10 · lần cuối ${esc(ago(s.last))}${s.lv ? " · rời trang " + s.lv + " lần (" + esc(fmtSecs(s.lsec)) + ")" + (s.aus ? ", " + s.aus + " bài tự nộp" : "") : ""}</p>
+                    <div class="table-wrap" style="max-height:60vh; overflow:auto;"><table><thead><tr><th>Câu</th><th>Dạng</th><th>Bài làm của học sinh</th><th>Đáp án</th><th>Kết quả</th></tr></thead><tbody>${rows}</tbody></table></div>
+                    <div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Đóng</button></div>`);
+            } catch (e) {
+                if (e.message !== "BAD_KEY") openModal('<h3>Chưa tải được bài làm</h3><p>Kiểm tra mạng rồi thử lại.</p><div class="actions"><button class="btn btn-ghost" onclick="closeModal()">Đóng</button></div>');
+            }
+        }
+
+        function downloadCsv(text, filename) {
+            const blob = new Blob([text], { type: "text/csv;charset=utf-8" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+        }
+
+        function buildDetailCsv(d, list) {
+            const cell = v => '"' + String(v == null ? "" : v).replace(/\*\*/g, "").replace(/"/g, '""') + '"';
+            const head = ["Lớp", "Họ và tên", "Câu", "Dạng bài", "Từ gốc / mục từ", "Câu hỏi", "Học sinh trả lời", "Đáp án", "Kết quả", "Điểm câu"];
+            const key = s => s.cls + "|" + s.name;
+            const byKey = {}; d.students.forEach(s => { byKey[key(s)] = s; });
+            const rows = [];
+            list.forEach(f => {
+                const s = byKey[key(f)]; if (!s) return;
+                d.questions.forEach((q, i) => {
+                    if (!isAsg(s, i)) return;
+                    const st = s.states[i] || "";
+                    rows.push([s.cls, s.name, q.id, TYPE_LABEL[qTypeOf(q)], qTypeOf(q) === "word_entry" ? (q.entry || "") : q.root, q.sentence.replace(/_{3,}/, "____").replace(/\*\*/g, ""),
+                        st === "X" ? "(xem đáp án)" : (s.texts[i] || ""), ansFull(q),
+                        st ? (RESULT_LABEL[st] || st) : "Chưa làm", st ? (isGood(st) ? 1 : 0) : ""].map(cell).join(","));
+                });
+            });
+            return "﻿" + [head.map(cell).join(",")].concat(rows).join("\r\n");
+        }
+
+        async function exportDetailCsv() {
+            const btn = el("export-detail-btn"); btn.disabled = true;
+            try {
+                const d = await fetchDetail();
+                downloadCsv(buildDetailCsv(d, filtered()), "ket-qua-tung-cau" + csvSuffix() + ".csv");
+            } catch (e) { if (e.message !== "BAD_KEY") showLoadError("Chưa tải được dữ liệu từng câu. Kiểm tra mạng rồi thử lại."); }
+            btn.disabled = false;
+        }
+
+        // ---------------------------------------------------------------- khởi chạy
+        window.onload = async function () {
+            if (!apiConfigured()) {
+                showGateError("Trang này chưa được kết nối (thiếu API_URL). Hãy mở bằng link /exec?page=dashboard của Web App.");
+                document.getElementById("gate-btn").disabled = true;
+                return;
+            }
+            let saved = "";
+            try { saved = sessionStorage.getItem(KEY_STORE) || ""; } catch (e) {}
+            if (saved) {
+                teacherKey = saved;
+                const ok = await loadData(true);
+                if (ok) enterApp();
+            }
+        };
+    </script>
+</body>
+</html>
