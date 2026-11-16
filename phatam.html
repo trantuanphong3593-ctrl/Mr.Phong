@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Âm khó với người Việt - Word Form 9 by NMC</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8;--accent:#38bdf8;--ok:#34d399;--warn:#fde68a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,Arial,sans-serif;line-height:1.55;padding:16px;-webkit-text-size-adjust:100%}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:1.45rem;font-weight:800;margin-bottom:4px}
+.lead{color:var(--muted);font-size:.92rem;margin-bottom:14px}
+.bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.bar .lb{font-weight:700;font-size:.85rem;color:var(--muted)}
+.seg{display:inline-flex;gap:6px;flex-wrap:wrap}
+.seg button{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:.85rem;font-weight:700;cursor:pointer;min-height:36px}
+.seg button.on{border-color:var(--accent);color:var(--accent);background:rgba(56,189,248,.12)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px}
+.step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:.86rem}
+.step b{color:var(--accent)}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.toc a{color:var(--text);text-decoration:none;border:1px solid var(--border);border-radius:999px;padding:4px 11px;font-size:.84rem;font-weight:700}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px}
+.card h2{font-size:1.1rem;font-weight:800;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.sym{font-size:1.7rem;color:var(--accent);font-weight:800}
+.tip{color:var(--muted);font-size:.9rem;margin:6px 0 10px}
+.tip b{color:var(--text)}
+.words{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.w{background:rgba(148,163,184,.1);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:7px 12px;font-size:.95rem;font-weight:600;cursor:pointer;min-height:40px}
+.w:active{background:rgba(56,189,248,.25)}
+.w small{color:var(--muted);font-weight:500;margin-left:4px}
+.pairs{font-size:.86rem;color:var(--warn);margin-bottom:10px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{display:inline-block;border:1px solid var(--accent);color:var(--accent);border-radius:10px;padding:7px 12px;font-weight:700;font-size:.86rem;text-decoration:none;min-height:38px;line-height:22px}
+.foot{color:var(--muted);font-size:.8rem;margin-top:20px;border-top:1px solid var(--border);padding-top:12px}
+.foot a{color:var(--accent)}
+#msg{color:var(--warn);font-size:.84rem}#msg:empty{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>👄 Âm khó với người Việt - Lớp 7</h1>
+<p class="lead">Mỗi âm có: từ mẫu để nghe (bấm vào từ), mẹo ngắn, và link xem miệng - lưỡi đặt thế nào trên Sayshape.</p>
+
+<div class="bar">
+  <span class="lb">Giọng:</span>
+  <span class="seg" id="seg-acc"><button data-k="acc" data-v="us">🇺🇸 Mỹ (US)</button><button data-k="acc" data-v="uk">🇬🇧 Anh (UK)</button></span>
+  <span class="lb">Nam/Nữ:</span>
+  <span class="seg" id="seg-sex"><button data-k="sex" data-v="f">Nữ</button><button data-k="sex" data-v="m">Nam</button></span>
+  <span class="lb">Tốc độ:</span>
+  <span class="seg" id="seg-spd"><button data-k="spd" data-v="0.55">🐢 Chậm</button><button data-k="spd" data-v="0.75">Vừa</button><button data-k="spd" data-v="0.92">Nhanh</button></span>
+  <span class="lb">Lặp lại:</span>
+  <span class="seg" id="seg-rep"><button data-k="rep" data-v="0">1 lần</button><button data-k="rep" data-v="2">🔁 2 lần (lần 2 chậm hơn)</button></span>
+  <div id="msg" style="flex-basis:100%"></div>
+</div>
+
+<div class="steps">
+  <div class="step"><b>Bước 1.</b> Bấm từ mẫu để nghe chậm, chú ý âm màu xanh ở tiêu đề.</div>
+  <div class="step"><b>Bước 2.</b> Bấm "Xem cách đọc" để thấy vị trí lưỡi, môi và nghe giọng thật.</div>
+  <div class="step"><b>Bước 3.</b> Tự nói lại 3 lần, rồi nghe lại từ mẫu để so sánh.</div>
+</div>
+
+<div class="toc" id="toc"></div>
+<div id="list"></div>
+
+<p class="foot">Link xem cách phát âm do trang <a href="https://sayshape.dqnotes.com/" target="_blank" rel="noopener noreferrer">Sayshape</a> (tác giả Quang, dqnotes.com) cung cấp; âm thanh và hình trên trang đó thuộc về tác giả. Trang này chỉ dẫn link, không sao chép nội dung. Phần mẹo do giáo viên tổng hợp lại bằng lời riêng. Giọng đọc mẫu ở đây là giọng máy của thiết bị.</p>
+</div>
+
+<script>
+(function(){
+  var KEY="wf9_nmc_voice_v1";
+  var pref={acc:"us",sex:"f",spd:"0.75",rep:"0"};
+  try{var o=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(o){ if(o.acc==="uk"||o.acc==="us")pref.acc=o.acc; if(o.sex==="f"||o.sex==="m")pref.sex=o.sex;
+      if(["0.55","0.75","0.92"].indexOf(String(o.spd))>=0)pref.spd=String(o.spd);
+      if(String(o.rep)==="0"||String(o.rep)==="2")pref.rep=String(o.rep);} }catch(e){}
+  function save(){ try{
+    var o={}; try{o=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){}
+    o.acc=pref.acc;o.sex=pref.sex;o.spd=pref.spd;o.rep=pref.rep;
+    localStorage.setItem(KEY,JSON.stringify(o)); }catch(e){} }
+
+  var SS="https://sayshape.dqnotes.com/";
+  var KEYS={"θ":"th","ð":"dh","ʃ":"sh","ʒ":"zh","s":"s","z":"z","l":"l","v":"v","d":"d","b":"b","g":"g","p":"p","t":"t","k":"k","iː":"fleece","ɪ":"kit"};
+  var SOUNDS=[
+   {id:"th",sym:"/θ/",title:"th không rung",links:["θ"],
+    tip:"Đặt đầu lưỡi chạm nhẹ sau răng cửa trên rồi thổi hơi qua khe nhỏ. KHÔNG rung cổ họng. Người Việt hay đọc thành t, s hoặc f.",
+    words:["think","three","thank","month","bath"],pairs:"think ≠ sink · three ≠ free · thank ≠ tank"},
+   {id:"dh",sym:"/ð/",title:"th có rung",links:["ð"],
+    tip:"Cùng vị trí lưỡi với /θ/ nhưng CÓ rung cổ họng (đặt tay lên cổ sẽ thấy rung). Hay bị đọc thành d hoặc z.",
+    words:["this","that","mother","brother","with"],pairs:"they ≠ day · then ≠ den"},
+   {id:"sh",sym:"/ʃ/",title:"sh",links:["ʃ"],
+    tip:"Chu môi nhẹ, lưỡi lùi hơn so với /s/, thổi hơi xì kéo dài. Một số bạn đọc thành s nên she nghe như see.",
+    words:["she","ship","shop","fish","wish"],pairs:"she ≠ see · ship ≠ sip · sheet ≠ seat"},
+   {id:"zh",sym:"/ʒ/",title:"âm /ʒ/ trong measure",links:["ʒ"],
+    tip:"Giống /ʃ/ nhưng có rung cổ họng. Hay bị đọc thành z hoặc gi.",
+    words:["measure","usual","vision","television","pleasure","decision"],pairs:""},
+   {id:"fs",sym:"/s/ /z/",title:"s, z ở cuối từ",links:["s","z"],
+    tip:"Tiếng Việt không có từ kết thúc bằng âm xì nên s cuối từ rất dễ bị nuốt. Quy tắc: sau âm không rung đọc /s/ (cats, books), sau âm rung đọc /z/ (plays, friends), sau s, z, sh, ch đọc thêm âm /ɪz/ (classes, watches).",
+    words:["cats","books","plays","friends","musicians","classes"],pairs:"cat ≠ cats · book ≠ books"},
+   {id:"fl",sym:"/l/",title:"l ở cuối từ",links:["l"],
+    tip:"Giữ đầu lưỡi chạm lợi sau răng trên cho đến hết âm. Đừng bỏ âm l hay đọc thành \"iu\".",
+    words:["feel","tell","school","people","festival","musical"],pairs:"feel ≠ fee · tell ≠ ten"},
+   {id:"fv",sym:"/v/",title:"v ở cuối từ",links:["v"],
+    tip:"Răng trên chạm môi dưới và giữ rung cổ đến hết từ. Đừng bỏ âm v.",
+    words:["five","love","have","give","live","leave"],pairs:"live ≠ lie · leave ≠ lea"},
+   {id:"fd",sym:"/d/ /b/ /ɡ/",title:"d, b, g ở cuối từ",links:["d","b","g"],
+    tip:"Giữ âm có rung, nguyên âm đứng trước hơi dài hơn. Đừng biến thành t, p, k.",
+    words:["bed","bad","bag","pig","cab","good"],pairs:"bed ≠ bet · bad ≠ bat · bag ≠ back · pig ≠ pick"},
+   {id:"pk",sym:"/p/ /t/ /k/",title:"p, t, k đầu từ",links:["p","t","k"],
+    tip:"Ở đầu từ có hơi bật nhẹ (đặt tay trước miệng sẽ thấy hơi thổi ra). Thiếu hơi bật thì pen nghe như Ben, coat nghe như goat.",
+    words:["pen","ten","coat","key","time","park"],pairs:"pen ≠ Ben · ten ≠ den · coat ≠ goat"},
+   {id:"vow",sym:"/iː/ /ɪ/",title:"iː dài và ɪ ngắn",links:["iː","ɪ"],
+    tip:"/iː/ dài, môi dàn, lưỡi cao; /ɪ/ ngắn và thả lỏng hơn. Đừng đọc hai âm này giống nhau.",
+    words:["sheep","ship","seat","sit","leave","live"],pairs:"sheep ≠ ship · seat ≠ sit · feet ≠ fit · cheap ≠ chip"}
+  ];
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function ssUrl(sym){ return SS+"?sound="+KEYS[sym]+"&accent="+(pref.acc==="uk"?"uk":"us")+"&lang=vi&l1=vi"; }
+
+  var voices=[];
+  function loadVoices(){ try{voices=window.speechSynthesis.getVoices()||[];}catch(e){voices=[];} }
+  if("speechSynthesis" in window){ loadVoices(); try{window.speechSynthesis.onvoiceschanged=loadVoices;}catch(e){} }
+  var FEM=/(female|zira|hazel|susan|samantha|karen|moira|tessa|fiona|serena|kate|victoria|libby|sonia|jenny|aria|emma|amy|joanna|salli|google us english|google uk english female)/i;
+  var MAL=/(\bmale\b|david|mark|george|daniel|alex|fred|ryan|guy|brian|james|oliver|google uk english male)/i;
+  function gender(v){ var n=v.name||""; if(/female/i.test(n))return "f"; if(MAL.test(n))return "m"; if(FEM.test(n))return "f"; return "?"; }
+  function pick(){
+    var lang=pref.acc==="uk"?"en-gb":"en-us";
+    var c=voices.filter(function(v){return String(v.lang||"").toLowerCase().replace("_","-")===lang;});
+    var want=c.filter(function(v){return gender(v)===pref.sex;});
+    var unk=c.filter(function(v){return gender(v)==="?";});
+    if(want.length)return {voice:want[0],ok:true};
+    if(unk.length)return {voice:unk[0],ok:false};
+    if(c.length)return {voice:c[0],ok:false};
+    return {voice:null,ok:false};
+  }
+  var token=0;
+  function speak(text){
+    if(!("speechSynthesis" in window)){ say("Thiết bị này chưa hỗ trợ đọc tiếng Anh."); return; }
+    var tok=++token;
+    try{
+      window.speechSynthesis.cancel();
+      var r=pick(), base=parseFloat(pref.spd)||0.75;
+      function one(rate,done){
+        var u=new SpeechSynthesisUtterance(text);
+        if(r.voice){u.voice=r.voice;u.lang=r.voice.lang;}else u.lang=pref.acc==="uk"?"en-GB":"en-US";
+        u.rate=rate; if(done)u.onend=done; window.speechSynthesis.speak(u);
+      }
+      one(base, pref.rep==="2" ? function(){ if(tok!==token)return; setTimeout(function(){ if(tok===token)one(Math.max(0.45,base*0.75),null); },700); } : null);
+      say(r.voice ? "" : "Thiết bị chưa có giọng " + (pref.acc==="uk"?"Anh":"Mỹ") + ", đang dùng giọng mặc định.");
+    }catch(e){}
+  }
+  function say(t){ var m=document.getElementById("msg"); if(m)m.textContent=t||""; }
+
+  function renderBar(){
+    ["acc","sex","spd","rep"].forEach(function(k){
+      var bs=document.querySelectorAll('#seg-'+k+' button');
+      for(var i=0;i<bs.length;i++) bs[i].className = bs[i].getAttribute("data-v")===pref[k] ? "on" : "";
+    });
+  }
+  function renderList(){
+    var toc="", html="";
+    SOUNDS.forEach(function(s){
+      toc+='<a href="#s-'+s.id+'">'+esc(s.sym)+'</a>';
+      html+='<div class="card" id="s-'+s.id+'"><h2><span class="sym">'+esc(s.sym)+'</span><span>'+esc(s.title)+'</span></h2>'+
+        '<p class="tip">'+esc(s.tip)+'</p><div class="words">'+
+        s.words.map(function(w){return '<button type="button" class="w" data-w="'+esc(w)+'">🔊 '+esc(w)+'</button>';}).join("")+'</div>'+
+        (s.pairs?'<p class="pairs">Cặp dễ nhầm: '+esc(s.pairs)+'</p>':"")+
+        '<div class="links">'+s.links.map(function(sym){return '<a href="'+esc(ssUrl(sym))+'" target="_blank" rel="noopener noreferrer">▶ Xem cách đọc /'+(sym==="g"?"ɡ":esc(sym))+'/</a>';}).join("")+'</div></div>';
+    });
+    document.getElementById("toc").innerHTML=toc;
+    document.getElementById("list").innerHTML=html;
+  }
+  document.addEventListener("click",function(ev){
+    var b=ev.target.closest?ev.target.closest("button"):null; if(!b)return;
+    var w=b.getAttribute("data-w"); if(w){ speak(w); return; }
+    var k=b.getAttribute("data-k"); if(k){ pref[k]=b.getAttribute("data-v"); save(); renderBar(); renderList(); speak(k==="rep"||k==="spd"?"slowly":"hello"); }
+  });
+  renderBar(); renderList();
+})();
+</script>
+</body>
+</html>
