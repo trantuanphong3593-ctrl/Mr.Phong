@@ -939,6 +939,9 @@
 
         <div id="app-error" class="login-error hidden"></div>
         <div id="voice-panel" class="voice-panel hidden" role="group" aria-label="Chọn giọng đọc">
+            <div class="voice-row hidden" id="vrow-src"><span class="vlabel">Nguồn giọng</span>
+                <button type="button" class="vopt" data-vk="src" data-vv="ai" onclick="setVoicePref('src','ai')">🤖 Giọng AI tự nhiên</button>
+                <button type="button" class="vopt" data-vk="src" data-vv="dev" onclick="setVoicePref('src','dev')">💻 Giọng của máy</button></div>
             <div class="voice-row"><span class="vlabel">Giọng vùng</span>
                 <button type="button" class="vopt" data-vk="acc" data-vv="us" onclick="setVoicePref('acc','us')">🇺🇸 Mỹ (US)</button>
                 <button type="button" class="vopt" data-vk="acc" data-vv="uk" onclick="setVoicePref('acc','uk')">🇬🇧 Anh (UK)</button></div>
@@ -1291,7 +1294,7 @@
 
         // ----- Giọng đọc: Mỹ/Anh, Nam/Nữ, tốc độ (lưu trên từng thiết bị) -----
         const VOICE_KEY = "wf9_nmc_voice_v1";
-        let voicePref = { acc: "us", sex: "f", spd: "0.75", rep: "0" };
+        let voicePref = { acc: "us", sex: "f", spd: "0.75", rep: "0", src: "ai" };
         (function loadVoicePref() {
             try {
                 const o = JSON.parse(localStorage.getItem(VOICE_KEY) || "null");
@@ -1299,6 +1302,7 @@
                 if (o && (o.sex === "f" || o.sex === "m")) voicePref.sex = o.sex;
                 if (o && ["0.55", "0.75", "0.92"].indexOf(String(o.spd)) >= 0) voicePref.spd = String(o.spd);
                 if (o && (String(o.rep) === "0" || String(o.rep) === "2")) voicePref.rep = String(o.rep);
+                if (o && (o.src === "ai" || o.src === "dev")) voicePref.src = o.src;
             } catch (e) {}
         })();
         const VOICE_FEMALE = /female|woman|samantha|karen|moira|tessa|serena|kate|susan|hazel|zira|victoria|allison|ava\b|fiona|veena|nicky|joanna|salli|emma|amy|jenny|aria|libby|sonia|catherine|jessa|ivy|kendra|kimberly|stephanie|martha|libby|maisie/i;
@@ -1334,6 +1338,7 @@
                 document.querySelectorAll("#voice-panel .vopt").forEach(b => b.classList.toggle("on", String(voicePref[b.dataset.vk]) === b.dataset.vv));
                 const info = document.getElementById("voice-info");
                 if (!info) return;
+                if (aiActive()) { info.classList.remove("warn"); info.textContent = aiInfo(); return; }
                 const r = pickVoice();
                 const accName = voicePref.acc === "uk" ? "Anh (UK)" : "Mỹ (US)";
                 const sexName = voicePref.sex === "m" ? "Nam" : "Nữ";
@@ -1365,7 +1370,75 @@
         try { if ('speechSynthesis' in window) window.speechSynthesis.addEventListener("voiceschanged", refreshVoiceUI); } catch (e) {}
 
         let speakToken = 0;
+        // ----- Giọng AI: file âm thanh tạo sẵn (Kokoro, Apache-2.0) đặt trong thư mục audio/ -----
+        let aiMan = null, aiEl = null;
+        function aiHash(s) {
+            let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+            for (let i = 0; i < s.length; i++) { const ch = s.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+            h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+            h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+            return ("00000000" + (h1 >>> 0).toString(16)).slice(-8) + ("00000000" + (h2 >>> 0).toString(16)).slice(-8);
+        }
+        function aiVoiceId() { return voicePref.acc + "_" + voicePref.sex; }
+        function aiActive() { return !!(aiMan && voicePref.src === "ai" && aiMan.voices && aiMan.voices[aiVoiceId()]); }
+        function aiInfo() {
+            const v = aiMan.voices[aiVoiceId()];
+            return "Đang dùng: giọng AI " + (v.label || aiVoiceId()) + ". Câu nào chưa có file âm thanh sẽ tự đọc bằng giọng của máy.";
+        }
+        function aiLoad() {
+            try {
+                if (!(typeof SITE_URL === "string" && SITE_URL) || !window.fetch) return;
+                fetch(SITE_URL + "audio/manifest.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(m => {
+                    if (!m || !m.voices || !Array.isArray(m.keys)) return;
+                    m.set = new Set(m.keys); aiMan = m;
+                    const row = document.getElementById("vrow-src"); if (row) row.classList.remove("hidden");
+                    refreshVoiceUI();
+                }).catch(() => {});
+            } catch (e) {}
+        }
+        window.addEventListener("load", aiLoad);
+        function aiStop() { try { if (aiEl) { aiEl.onended = null; aiEl.onerror = null; aiEl.pause(); } } catch (e) {} }
+        function aiPlay(url, rate, onend, onfail) {
+            if (!aiEl) { aiEl = new Audio(); aiEl.preload = "auto"; }
+            const el = aiEl;
+            el.onended = null; el.onerror = null;
+            try { el.pause(); } catch (e) {}
+            el.src = url;
+            try { el.preservesPitch = true; el.webkitPreservesPitch = true; el.mozPreservesPitch = true; } catch (e) {}
+            el.defaultPlaybackRate = rate; el.playbackRate = rate;
+            el.onended = onend || null;
+            el.onerror = onfail || null;
+            const pr = el.play();
+            if (pr && pr.catch) pr.catch(() => { if (onfail) onfail(); });
+        }
+        // trả về true nếu đã nhận phát bằng file AI; false thì để giọng của máy đọc như cũ
+        function aiTry(text, opts) {
+            try {
+                if (!aiActive()) return false;
+                const t = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
+                if (!t || !aiMan.set.has(aiHash(t))) return false;
+                const h = aiHash(t), vid = aiVoiceId(), base = SITE_URL + "audio/" + vid + "/";
+                const tok = ++speakToken;
+                try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}
+                const r = opts && opts.rate ? opts.rate : (parseFloat(voicePref.spd) || 0.75);
+                // 0.92 = file thường · 0.75 = file chậm · 0.55 = file chậm phát thêm 0.8x
+                const first = r >= 0.85 ? { u: base + h + ".mp3", p: 1 } : (r >= 0.65 ? { u: base + "s/" + h + ".mp3", p: 1 } : { u: base + "s/" + h + ".mp3", p: 0.8 });
+                const second = { u: base + "s/" + h + ".mp3", p: first.p < 1 ? 0.7 : 0.85 };
+                const twice = voicePref.rep === "2" && !(opts && opts.once);
+                const fail = () => { if (tok === speakToken) { aiStop(); speakTextTTS(text, opts); } };
+                aiPlay(first.u, first.p, twice ? () => {
+                    if (tok !== speakToken) return;
+                    setTimeout(() => { if (tok === speakToken) aiPlay(second.u, second.p, null, null); }, 700);
+                } : null, fail);
+                return true;
+            } catch (e) { return false; }
+        }
         function speakText(text, opts) {
+            if (aiTry(text, opts)) return;
+            aiStop();
+            speakTextTTS(text, opts);
+        }
+        function speakTextTTS(text, opts) {
             if (!('speechSynthesis' in window)) return;
             opts = opts || {};
             const tok = ++speakToken;
