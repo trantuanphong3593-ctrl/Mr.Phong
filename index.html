@@ -943,6 +943,9 @@
             <div class="voice-row hidden" id="vrow-src"><span class="vlabel">Nguồn giọng</span>
                 <button type="button" class="vopt" data-vk="src" data-vv="ai" onclick="setVoicePref('src','ai')">🤖 Giọng AI tự nhiên</button>
                 <button type="button" class="vopt" data-vk="src" data-vv="dev" onclick="setVoicePref('src','dev')">💻 Giọng của máy</button></div>
+            <div class="voice-row hidden" id="vrow-var"><span class="vlabel">Kiểu giọng AI</span>
+                <button type="button" class="vopt" data-vk="vr" data-vv="1" onclick="setVoicePref('vr','1')">🎙 Giọng 1</button>
+                <button type="button" class="vopt" data-vk="vr" data-vv="2" onclick="setVoicePref('vr','2')">🎤 Giọng 2</button></div>
             <div class="voice-row"><span class="vlabel">Giọng vùng</span>
                 <button type="button" class="vopt" data-vk="acc" data-vv="us" onclick="setVoicePref('acc','us')">🇺🇸 Mỹ (US)</button>
                 <button type="button" class="vopt" data-vk="acc" data-vv="uk" onclick="setVoicePref('acc','uk')">🇬🇧 Anh (UK)</button></div>
@@ -1295,7 +1298,7 @@
 
         // ----- Giọng đọc: Mỹ/Anh, Nam/Nữ, tốc độ (lưu trên từng thiết bị) -----
         const VOICE_KEY = "wf9_nmc_voice_v1";
-        let voicePref = { acc: "us", sex: "f", spd: "0.75", rep: "0", src: "ai" };
+        let voicePref = { acc: "us", sex: "f", spd: "0.75", rep: "0", src: "ai", vr: "1" };
         (function loadVoicePref() {
             try {
                 const o = JSON.parse(localStorage.getItem(VOICE_KEY) || "null");
@@ -1304,6 +1307,7 @@
                 if (o && ["0.55", "0.75", "0.92"].indexOf(String(o.spd)) >= 0) voicePref.spd = String(o.spd);
                 if (o && (String(o.rep) === "0" || String(o.rep) === "2")) voicePref.rep = String(o.rep);
                 if (o && (o.src === "ai" || o.src === "dev")) voicePref.src = o.src;
+                if (o && (o.vr === "1" || o.vr === "2")) voicePref.vr = o.vr;
             } catch (e) {}
         })();
         const VOICE_FEMALE = /female|woman|samantha|karen|moira|tessa|serena|kate|susan|hazel|zira|victoria|allison|ava\b|fiona|veena|nicky|joanna|salli|emma|amy|jenny|aria|libby|sonia|catherine|jessa|ivy|kendra|kimberly|stephanie|martha|libby|maisie/i;
@@ -1339,6 +1343,8 @@
                 document.querySelectorAll("#voice-panel .vopt").forEach(b => b.classList.toggle("on", String(voicePref[b.dataset.vk]) === b.dataset.vv));
                 const info = document.getElementById("voice-info");
                 if (!info) return;
+                const vrow = document.getElementById("vrow-var");
+                if (vrow) vrow.classList.toggle("hidden", !(aiMan && voicePref.src === "ai" && aiMan.voices && (aiMan.voices.us_f2 || aiMan.voices.us_m2 || aiMan.voices.uk_f2 || aiMan.voices.uk_m2)));
                 if (aiActive()) { info.classList.remove("warn"); info.textContent = aiInfo(); return; }
                 const r = pickVoice();
                 const accName = voicePref.acc === "uk" ? "Anh (UK)" : "Mỹ (US)";
@@ -1380,7 +1386,7 @@
             h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
             return ("00000000" + (h1 >>> 0).toString(16)).slice(-8) + ("00000000" + (h2 >>> 0).toString(16)).slice(-8);
         }
-        function aiVoiceId() { return voicePref.acc + "_" + voicePref.sex; }
+        function aiVoiceId() { return voicePref.acc + "_" + voicePref.sex + (voicePref.vr === "2" ? "2" : ""); }
         function aiActive() { return !!(aiMan && voicePref.src === "ai" && aiMan.voices && aiMan.voices[aiVoiceId()]); }
         function aiInfo() {
             const v = aiMan.voices[aiVoiceId()];
