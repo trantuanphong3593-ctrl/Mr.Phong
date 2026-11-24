@@ -314,6 +314,7 @@
             border: 1px solid var(--border);
         }
 
+        .ws-item { content-visibility: auto; contain-intrinsic-size: auto 230px; }
         .q-pill {
             width: 36px;
             height: 34px;
@@ -1784,7 +1785,7 @@
                 else el("worksheet-list").innerHTML = "";
             }
             if (appState.currentMode === "handbook") renderWordFamilies();
-            const allBtn = el("ws-size-all"); if (allBtn) allBtn.innerText = "📋 Tất cả " + poolFor("ws-type-filter").length + " câu";
+            const allBtn = el("ws-size-all"); if (allBtn) allBtn.innerText = "📋 Tất cả " + Math.min(poolFor("ws-type-filter").length, WS_ALL_MAX) + " câu";
         }
         function pickUnit(u) {
             const s = appState.scope;
@@ -1822,8 +1823,12 @@
             return !!(questionObj.altAnswers && questionObj.altAnswers.some(a => norm(a) === clean));
         }
 
+        let _qIdx = null, _qIdxFor = null;
         function getQuestionById(id) {
-            return questionsData.find(q => q.id === id);
+            if (_qIdxFor !== questionsData || !_qIdx || _qIdx.size !== questionsData.length) {
+                _qIdx = new Map(); questionsData.forEach(q => _qIdx.set(q.id, q)); _qIdxFor = questionsData;
+            }
+            return _qIdx.get(id);
         }
 
         function getCurrentQuestion() {
@@ -1911,11 +1916,29 @@
             });
         }
 
-        function renderFlashcardPills() {
+        const PILL_PAGE = 100;
+        function pillGo(dir) {
+            const pages = Math.ceil(appState.currentOrder.length / PILL_PAGE);
+            const cur = typeof appState.pillPage === "number" ? appState.pillPage : Math.floor(appState.currentIndex / PILL_PAGE);
+            appState.pillPage = Math.max(0, Math.min(pages - 1, cur + dir));
+            renderFlashcardPills(true);
+        }
+        function renderFlashcardPills(keepPage) {
             const container = document.getElementById("fc-pills-container");
             container.innerHTML = "";
+            const n = appState.currentOrder.length;
+            let from = 0, to = n;
+            if (n > PILL_PAGE * 1.5) {
+                const cp = Math.floor(appState.currentIndex / PILL_PAGE);
+                if (!keepPage || typeof appState.pillPage !== "number") appState.pillPage = cp;
+                from = appState.pillPage * PILL_PAGE; to = Math.min(n, from + PILL_PAGE);
+                const prev = document.createElement("button");
+                prev.className = "q-pill"; prev.innerText = "‹"; prev.title = "100 câu trước"; prev.disabled = appState.pillPage === 0;
+                prev.onclick = () => pillGo(-1); container.appendChild(prev);
+            } else { appState.pillPage = undefined; }
 
-            appState.currentOrder.forEach((qId, idx) => {
+            for (let idx = from; idx < to; idx++) {
+                const qId = appState.currentOrder[idx];
                 const btn = document.createElement("button");
                 btn.className = "q-pill";
                 btn.innerText = qId;
@@ -1932,7 +1955,16 @@
                     renderFlashcardView();
                 };
                 container.appendChild(btn);
-            });
+            }
+            if (n > PILL_PAGE * 1.5) {
+                const lab = document.createElement("span");
+                lab.className = "muted"; lab.style.cssText = "font-size:0.75rem;align-self:center;padding:0 4px;";
+                lab.innerText = (from + 1) + "–" + to + " / " + n;
+                container.appendChild(lab);
+                const next = document.createElement("button");
+                next.className = "q-pill"; next.innerText = "›"; next.title = "100 câu sau"; next.disabled = to >= n;
+                next.onclick = () => pillGo(1); container.appendChild(next);
+            }
         }
 
         function renderFlashcardView() {
@@ -2133,6 +2165,7 @@
         // ==========================================================================
         // 7. CHẾ ĐỘ 2: LÀM ĐỀ TỔNG HỢP (WORKSHEET MODE: 10, 20 HOẶC 40 CÂU)
         // ==========================================================================
+        const WS_ALL_MAX = 300;
         function generateWorksheet(size) {
             appState.wsQuizSize = size;
             appState.wsSubmitted = false;
@@ -2145,7 +2178,8 @@
             const pool = poolFor("ws-type-filter");
             const allIds = pool.map(q => q.id);
             let ids;
-            if (size >= allIds.length) {
+            if (size >= 1000 && allIds.length > WS_ALL_MAX) size = WS_ALL_MAX;   // kho lớn: "Tất cả" lấy tối đa 300 câu ngẫu nhiên để máy không nặng
+            if (size >= 1000 || size >= allIds.length) {
                 ids = allIds;
             } else {
                 ids = [...allIds].sort(() => Math.random() - 0.5).slice(0, size);
@@ -2155,20 +2189,44 @@
             ids = ids.map((id, i) => ({ id, i })).sort((a, b) => (rank(a.id) - rank(b.id)) || (a.i - b.i)).map(o => o.id);
             appState.wsQuestionIds = ids;
             const allBtn = el("ws-size-all");
-            if (allBtn) allBtn.innerText = "📋 Tất cả " + allIds.length + " câu";
+            if (allBtn) allBtn.innerText = "📋 Tất cả " + Math.min(allIds.length, WS_ALL_MAX) + " câu";
 
             document.getElementById("ws-score-banner").classList.add("hidden");
             renderWorksheetItems();
             acOnMode(appState.currentMode);
         }
 
+        // Đề lớn (hàng trăm câu): dựng 30 câu đầu ngay, phần còn lại dựng dần để máy không bị đứng.
+        let wsRender = { token: 0, entryShown: null, next: 0, timer: 0 };
+        function wsFlush() {
+            if (wsRender.next < appState.wsQuestionIds.length) { clearTimeout(wsRender.timer); wsRenderRange(wsRender.token, appState.wsQuestionIds.length); }
+        }
+        function wsRenderRange(token, until) {
+            if (token !== wsRender.token) return;
+            const ids = appState.wsQuestionIds;
+            const end = Math.min(until, ids.length);
+            if (wsRender.next >= end) return;
+            wsRenderItems(wsRender.next, end);
+            wsRender.next = end;
+            if (end < ids.length) wsRender.timer = setTimeout(() => wsRenderRange(token, end + 40), 16);
+        }
         function renderWorksheetItems() {
             const listEl = document.getElementById("worksheet-list");
             listEl.innerHTML = "";
-            const entryShown = {};
+            wsRender.token++; clearTimeout(wsRender.timer);
+            wsRender.entryShown = {}; wsRender.next = 0;
+            const first = Math.min(30, appState.wsQuestionIds.length);
+            wsRenderRange(wsRender.token, first);
+            if (wsRender.next < appState.wsQuestionIds.length) wsRender.timer = setTimeout(() => wsRenderRange(wsRender.token, wsRender.next + 40), 16);
+        }
+        function wsRenderItems(from, to) {
+            const listEl = document.getElementById("worksheet-list");
+            const entryShown = wsRender.entryShown;
             const multi = typesPresent().length > 1;
+            const idsAll = appState.wsQuestionIds;
 
-            appState.wsQuestionIds.forEach((qId, index) => {
+            for (let index = from; index < to; index++) {
+                const qId = idsAll[index];
                 const q = getQuestionById(qId);
                 const t = qType(q);
                 const wf = t === "dien_tu" ? wordFamilies.find(f => f.id === q.familyId) : null;
@@ -2224,7 +2282,7 @@
                     </div>
                 `;
                 listEl.appendChild(item);
-            });
+            }
         }
 
         function wsPick(qId) {
@@ -2234,6 +2292,7 @@
         }
 
         function submitWorksheetQuiz(opts) {
+            wsFlush();
             if (acOn() && appState.wsSubmitted && !(opts && opts.auto)) return;   // đề có giám sát: nộp một lần
             let correctCount = 0;
             const total = appState.wsQuestionIds.length;
@@ -2678,7 +2737,7 @@
             const n = questionsData.length;
             document.querySelectorAll(".n-q").forEach(e => { e.innerText = n; });
             el("fc-filter-all").innerText = "Tất cả (" + n + ")";
-            el("ws-size-all").innerText = "📋 Tất cả " + n + " câu";
+            el("ws-size-all").innerText = "📋 Tất cả " + Math.min(n, WS_ALL_MAX) + " câu";
             fillTypeSelect("fc-type-filter");
             fillTypeSelect("ws-type-filter");
             const pw = el("progress-wrap");
@@ -2752,8 +2811,10 @@
 
             updateStatsUI();
             renderFlashcardView();
-            generateWorksheet(1000);
-            renderWordFamilies();
+            appState.wsQuizSize = 1000;
+            if (appState.currentMode === "worksheet") generateWorksheet(1000);
+            else acOnMode(appState.currentMode);   // như trước: cập nhật thanh theo dõi ngay khi vào
+            if (appState.currentMode === "handbook") renderWordFamilies();
             if (pendingReset || Object.keys(syncQueue).length) scheduleSync(300);
         }
 
